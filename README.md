@@ -22,3 +22,12 @@ source .venv/bin/activate
 ```shell
 pip install -r requirements.txt
 ```
+
+### Prevent committing sensitive output
+
+Add this line to your shell configuration
+```shell
+git config filter.strip-notebook-output.clean 'jupyter nbconvert --ClearOutputPreprocessor.enabled=True --to=notebook --stdin --stdout --log-level=ERROR'
+```
+
+[Source]()
