@@ -1,7 +1,17 @@
 # YeastLume
 Repository for the YeastLume data pipeline.
 
-## Initial Setup
+---
+
+## Automated Setup
+Run the setup script for the repository. The script will exit on failure and assumes that Python, Pip, Conda, and Git are installed.
+```shell
+./setup.sh
+```
+
+---
+
+## Manual Setup
 
 **All setup instructions are optimized for and assuming macOS/Linux.**
 
@@ -22,6 +32,8 @@ source .venv/bin/activate
 ```shell
 pip install -r requirements.txt
 ```
+
+---
 
 ### Prevent committing sensitive output
 
