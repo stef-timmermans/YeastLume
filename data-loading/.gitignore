@@ -1,3 +1,4 @@
 example-data/
 data/*
 !data/README.md
+formatted-frame-pairs/*
