@@ -1,4 +1,4 @@
 example-data/
-data/*
-!data/README.md
+raw-data/*
+!raw-data/README.md
 formatted-frame-pairs/*
