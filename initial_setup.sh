@@ -2,6 +2,9 @@
 # Leave the script if an error is encountered.
 set -e
 
+# Remove tracked, user-specific configuration files
+rm accounts/drive.json.enc
+
 # Setup the general virtual environment for
 # data preparation.
 python3 -m venv .venv
