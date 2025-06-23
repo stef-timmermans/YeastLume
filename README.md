@@ -1,17 +1,17 @@
 # YeastLume
-Repository for the YeastLume data pipeline.
+Repository for the YeastLume data pipeline. Follow the directions below to configure the repository for your own purposes.
 
 ---
 
-## Initial Setup
+## 1. Initial Setup
 Run the setup script for the repository. The script will exit on failure and assumes that Python, Pip, Conda, and Git are installed.
 ```shell
-./setup.sh
+./initial_setup.sh
 ```
 
 ---
 
-## Remote Data Hosting via DVC
+## 2. Remote Data Hosting via DVC
 Hosting the training data can be done however you please, however this project was developed using Data Version Control (DVC) with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork** of the repository:
 
 1. Create a new Google Cloud Platform project
@@ -19,6 +19,11 @@ Hosting the training data can be done however you please, however this project w
 3. Go to "APIs and Services" → "Credentials" and configure a basic consent screen. Configure for internal use unless deploying a public-facing pipeline.
 4. Under "APIs and Services" → "Credentials", click "+ Create credentials" and select for service accounts. Configure account to be an Editor or Owner.
 5. Click on the created service account email and go to "Keys" and click "Add key" to create a new JSON key.
+6. Move the created JSON file into [`/accounts`](./accounts) and rename it to `drive.json`. It should automatically be ignored from tracking at this point.
+7. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create a key in [`/accounts`](./accounts) that can be fed into the decryption logic called by the remote data loader.
+```shell
+./encrypt.sh
+```
 
 ## Manual Setup
 
