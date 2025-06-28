@@ -4,7 +4,7 @@
 #!/bin/bash
 set -e
 
-# Create a SOPs key file (ignored from tracking)
+# Create a SOPS key file (ignored from tracking)
 age-keygen -o accounts/key
 
 # Use the key file to create an encrypted version

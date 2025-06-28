@@ -22,9 +22,16 @@ Hosting the training data can be done however you please, however this project w
 6. Under "APIs and Services" → "Credentials", click "+ Create credentials" and select for an OAuth Client ID of type "Desktop app".
 7. From the pop-up, download the provided JSON from the bottom-left button.
 8. Move the created JSON file into [`/accounts`](./accounts) and rename it to `drive.json`. It should automatically be ignored from tracking at this point.
-9. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create a key in [`/accounts`](./accounts) that can be fed into the decryption logic called by the remote data loader.
+
+*Optional steps if involving multiple researchers/developers:*
+
+9. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`/accounts`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
 ```shell
 ./encrypt.sh
+```
+10. When running in a different copy of the repository, bring a copy of the correct `key` back into [`/accounts`](./accounts) manually, and run the decryption script.
+```shell
+./decrypt.sh
 ```
 
 *For more information about configuring a Google Cloud Platform project, please see the [University of Groningen Hábrók documentation](https://wiki.hpc.rug.nl/habrok/data_management/google_drive). To configure on Hábrók, see section "Loading and configuring the application".*
