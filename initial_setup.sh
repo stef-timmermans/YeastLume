@@ -16,10 +16,19 @@ pip install -r requirements.txt
 # README.md.
 deactivate
 
-# Clone the diffusion model repository.
+# Clone the diffusion model repository and remove it from tracking
 # https://github.com/xuekt98/BBDM
 git clone https://github.com/xuekt98/BBDM.git
+cd BBDM
+rm -rf .git
+
+# Tweak the config file to correctly load in the user-provided dataset
+cd configs
+sed -i '' "19s|dataset_path: '.*'|dataset_path: '../../data'|" Template-BBDM.yaml
+sed -i '' "19s|dataset_path: '.*'|dataset_path: '../../data'|" Template-LBBDM-f4.yaml
+sed -i '' "19s|dataset_path: '.*'|dataset_path: '../../data'|" Template-LBBDM-f8.yaml
+sed -i '' "19s|dataset_path: '.*'|dataset_path: '../../data'|" Template-LBBDM-f16.yaml
+cd ..
 
 # Setup the "BBDM" Conda environment
-cd BBDM
 conda env create -f environment.yml
