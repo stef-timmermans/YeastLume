@@ -1,5 +1,6 @@
 # Ignore the Google Drive configuration file
 drive.json
+temp.json
 
 # Ignore the SOPS key
 key
