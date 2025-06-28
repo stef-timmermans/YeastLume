@@ -1,4 +1,6 @@
+# Ignore the data inputs and outputs
 example-data/
 raw-data/*
 !raw-data/README.md
 formatted-frame-pairs/*
+test.png
