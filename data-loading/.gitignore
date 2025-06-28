@@ -1,5 +1,6 @@
 # Ignore the data inputs and outputs
-example-data/
+example-data/*
+!example-data/README.md
 raw-data/*
 !raw-data/README.md
 formatted-frame-pairs/*
