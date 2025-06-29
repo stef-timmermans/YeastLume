@@ -36,6 +36,10 @@ BBDM expects data in a particular format to train, validate, and test the model.
 ```shell
 ./preprocessing.sh
 ```
+
+*Note this script does not save notebook output other than the created data directory. In the event of errors, see Line 9 of [`preprocessing.sh`](preprocessing.sh).*
+
+
 3. Push the model input data to remote (if training the model on a different machine).
 ```shell
 rclone copy -P data/ gdrive:YeastLume/data/
@@ -48,9 +52,10 @@ With the training set successfully created, use it to build the BBDM model weigh
 ```shell
 rclone copy -P gdrive:YeastLume/data/ data/
 ```
-2. TBD...
-
-*Note this script does not save notebook output other than the created data directory. In the event of errors, see Line 9 of [`preprocessing.sh`](preprocessing.sh).*
+2. Train the model via the SLURM job script.
+```shell
+./train_bbdm_job.sh
+```
 
 ---
 
