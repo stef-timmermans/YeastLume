@@ -31,6 +31,7 @@ else
     SED_EXT=(-i)
 fi
 
+# Overwrite the BBDM template files' target input data path
 sed "${SED_EXT[@]}" "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-BBDM.yaml
 sed "${SED_EXT[@]}" "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
 sed "${SED_EXT[@]}" "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f8.yaml
