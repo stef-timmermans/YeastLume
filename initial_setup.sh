@@ -1,19 +1,14 @@
 #!/bin/bash
-# Leave the script if an error is encountered.
+# Leave the script if an error is encountered
 set -e
 
-# Remove tracked, user-specific configuration files
-rm accounts/drive.json.enc
-
-# Setup the general virtual environment for
-# data preparation.
+# Setup the general virtual environment for data preparation
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# This can be re-entered manually; work through
-# the logic in the `data-loading` directory's
-# README.md.
+# This can be re-entered manually; work through the logic in the
+# `data-loading` directory's README.md
 deactivate
 
 # Set the data data working directory
