@@ -2,16 +2,8 @@
 # Leave the script if an error is encountered
 set -e
 
-# Setup the general virtual environment for data preparation
+# Purge old modules
 module purge
-module load Python/3.11.5-GCCcore-13.2.0
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-# This can be re-entered manually; work through the logic in the
-# `data-loading` directory's README.md
-deactivate
 
 # Set the data data working directory
 DATA_DIR="$(pwd)/data"
@@ -39,6 +31,9 @@ sed "${SED_EXT[@]}" "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Templa
 sed "${SED_EXT[@]}" "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f8.yaml
 sed "${SED_EXT[@]}" "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f16.yaml
 cd ..
+
+# Load in a compatible Python version for BBDM
+module load Python/3.9.6-GCCcore-11.2.0
 
 # Setup the "BBDM" Conda environment
 module load Anaconda3/2024.02-1
