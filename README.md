@@ -37,7 +37,7 @@ BBDM expects data in a particular format to train, validate, and test the model.
 ./preprocessing.sh
 ```
 
-*Note this script does not save notebook output other than the created data directory. In the event of errors, remove see Line 9 of [`preprocessing.sh`](preprocessing.sh).*
+*Note this script does not save notebook output other than the created data directory. In the event of errors, see Line 9 of [`preprocessing.sh`](preprocessing.sh).*
 
 ---
 
