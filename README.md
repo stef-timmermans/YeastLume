@@ -28,9 +28,20 @@ Hosting the training data can be done via any service; however, this project was
 
 ---
 
+## 3. Data Preparation and Preprocessing
+BBDM expects data in a particular format to train, validate, and test the model. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
+
+1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your `.tif` files. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+2. Run the preprocessing script.
+```shell
+./preprocessing.sh
+```
+
+---
+
 ## Remote Data Hosting via Rclone (cont.)
 
-Note via [Remote Data Hosting via Rclone](#2-remote-data-hosting-via-rclone), that these steps are optional and are only needed if sharing a single Google Drive data setup.
+Note via [the Remote Data Hosting via Rclone section](#2-remote-data-hosting-via-rclone) that these steps are optional and are only needed if sharing a single Google Drive data setup.
 
 10. Rename the JSON file in [`/accounts`](./accounts) to `drive.json`. 
 11. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`/accounts`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
@@ -42,7 +53,9 @@ Note via [Remote Data Hosting via Rclone](#2-remote-data-hosting-via-rclone), th
 ./accounts/decrypt.sh
 ```
 
-### Prevent Committing Output from Notebooks
+---
+
+## Prevent Committing Output from Notebooks
 
 Add this line to your shell configuration:
 ```shell
