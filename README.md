@@ -22,7 +22,7 @@ Hosting the training data can be done via any service; however, this project was
 6. Under "APIs and Services" → "Credentials", click "+ Create credentials" and select for an OAuth Client ID of type "Desktop app".
 7. From the pop-up, download the provided JSON from the bottom-left button.
 8. Move the created JSON file into [`/accounts`](./accounts) for convenience. It should automatically be ignored from tracking at this point.
-9. Follow the [University of Groningen Hábrók documentation](https://wiki.hpc.rug.nl/habrok/data_management/google_drive) (or a substitute host supporting Rclone), specifically the section *"Loading and configuring the application"*. Copy the appropriate variable names from the Google Cloud Project JSON file and authenticate.
+9. Follow the [University of Groningen Hábrók documentation](https://wiki.hpc.rug.nl/habrok/data_management/google_drive) (or a substitute host supporting Rclone), specifically the section *"Loading and configuring the application"*. Copy the appropriate variable names from the Google Cloud Project JSON file and authenticate. Name the remote `gdrive`. This configuration should be done on each machine Rclone is used to push and pull data.
 
 *Optional steps if involving multiple researchers/developers are included at the bottom of this document under [Remote Data Hosting via Rclone (cont.)](#remote-data-hosting-via-rclone-cont)*.
 
@@ -36,6 +36,19 @@ BBDM expects data in a particular format to train, validate, and test the model.
 ```shell
 ./preprocessing.sh
 ```
+3. Push the model input data to remote (if training the model on a different machine).
+```shell
+rclone copy -P data/ gdrive:YeastLume/data/
+```
+
+## 4. Training the Model
+With the training set successfully created, use it to build the BBDM model weights.
+
+1. Pull the model input data from remote (if preprocessing was done on a different machine).
+```shell
+rclone copy -P gdrive:YeastLume/data/ data/
+```
+2. TBD...
 
 *Note this script does not save notebook output other than the created data directory. In the event of errors, see Line 9 of [`preprocessing.sh`](preprocessing.sh).*
 
