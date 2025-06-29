@@ -50,6 +50,7 @@ With the training set successfully created, use it to build the BBDM model weigh
 
 1. Pull the model input data from remote (if preprocessing was done on a different machine).
 ```shell
+module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
 ```
 2. Train the model via the SLURM job script.
