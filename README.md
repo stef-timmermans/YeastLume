@@ -4,10 +4,19 @@ Repository for the YeastLume data pipeline. Follow the directions below to confi
 # Installation and Use
 Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data.
 
+### Local Requirements
+- Python 3.11+
+- Rclone *(if pushing data)*
+
+### Remote Requirements
+- SLURM job scheduler
+- Unix/Linux shell with CUDA GPU available
+- Conda (using Python 3.9.16)
+
 ---
 
 ## 1. Setup Data Preparation
-Run the data loading setup script for the repository. The script will exit on failure and assumes that Python and Pip are installed.
+Run the data loading setup script for the repository.
 
 ```shell
 ./preprocessing_setup.sh
@@ -57,7 +66,7 @@ With the training set successfully created, use it to build the BBDM model weigh
 module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
 ```
-2. Configure a conda environment the utilized model ([BBDM](https://github.com/xuekt98/BBDM)). This script is developed for for the University of Groningen's Hábrók, so many install instructions may break on other machines.
+2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script is developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
 ```shell
 ./bbdm_setup.sh
 ```
@@ -78,12 +87,12 @@ sbatch train_bbdm_job.sh
 
 Note via [the Remote Data Hosting via Rclone section](#3-remote-data-hosting-via-rclone) that these steps are optional and are only needed if sharing a single Google Drive data setup.
 
-10. Rename the JSON file in [`/accounts`](./accounts) to `drive.json`. 
-11. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`/accounts`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
+11. Rename the JSON file in [`/accounts`](./accounts) to `drive.json`. 
+12. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`/accounts`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
 ```shell
 ./accounts/encrypt.sh
 ```
-12. When running in a different copy of the repository, bring a copy of the correct `key` back into [`/accounts`](./accounts) manually, and run the decryption script.
+13. When running in a different copy of the repository, bring a copy of the correct `key` back into [`/accounts`](./accounts) manually, and run the decryption script.
 ```shell
 ./accounts/decrypt.sh
 ```
