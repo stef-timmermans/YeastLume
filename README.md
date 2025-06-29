@@ -12,7 +12,7 @@ Run the setup script for the repository. The script will exit on failure and ass
 ---
 
 ## 2. Remote Data Hosting via Rclone
-Hosting the training data can be done however you please, however this project was developed using Rclone—Hábrók's suggested data software module—with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork** of the repository:
+Hosting the training data can be done via any service; however, this project was developed using Rclone—University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork** of the repository:
 
 1. Create a new Google Cloud Platform project.
 2. Under "APIs and Services" → "Enabled APIs & services", click "+ Enable APIs and services" and search for and enable the Google Drive API.
@@ -26,7 +26,7 @@ Hosting the training data can be done however you please, however this project w
 
 *Optional steps if involving multiple researchers/developers are included at the bottom of this document under [Remote Data Hosting via Rclone (cont.)](#remote-data-hosting-via-rclone-cont)*.
 
---
+---
 
 ## Remote Data Hosting via Rclone (cont.)
 
