@@ -23,20 +23,25 @@ mkdir -p "$TMPDIR"
 module purge
 module load CUDA/12.4.0
 
+# Load Conda
+module load Anaconda3/2024.02-1
+eval "$(conda shell.bash hook)"
+
 # Activate Conda environment
-source ~/miniconda3/etc/profile.d/conda.sh
 conda activate BBDM
 
 # Navigate to BBDM code copied inside YeastLume
 cd "$HOME/YeastLume/BBDM"
 
-# Print info for logging
+# Print environment info for logging
 echo "Job ID: $SLURM_JOB_ID"
 echo "Running on: $(hostname)"
 echo "Start time: $(date)"
 nvidia-smi
 echo "Python path: $(which python)"
 echo "Working directory: $(pwd)"
+echo "Conda version: $(conda --version)"
+echo "Python version: $(python --version)"
 echo ""
 
 # Launch training
