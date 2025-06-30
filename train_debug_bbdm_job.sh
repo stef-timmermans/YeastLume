@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=bbdm-debug-train
+#SBATCH --gpus-per-node=a100:1
 #SBATCH --partition=gpushort
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
