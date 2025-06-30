@@ -6,7 +6,7 @@ training:
   save_interval: 20
   sample_interval: 2
   validation_interval: 20
-  accumulate_grad_batches: 4
+  accumulate_grad_batches: 2
 
 testing:
   clip_denoised: True
@@ -22,13 +22,13 @@ data:
     to_normal: True
     flip: False
   train:
-    batch_size: 1
+    batch_size: 8
     shuffle: True
   val:
-    batch_size: 1
+    batch_size: 8
     shuffle: True
   test:
-    batch_size: 1
+    batch_size: 8
     # shuffle: False
 
 model:
