@@ -19,8 +19,8 @@ git clone https://github.com/xuekt98/BBDM.git
 echo "✅ Cloned BBDM repository"
 
 # Overwrite the BBDM environment file and model instruction template
-mv environment.yml BBDM/
-mv Template-BBDM.yaml BBDM/configs
+cp environment.yml BBDM/
+cp Template-BBDM.yaml BBDM/configs/
 cd BBDM
 echo "✅ Moved environment.yml, Template-BBDM.yaml; changed into BBDM directory"
 
