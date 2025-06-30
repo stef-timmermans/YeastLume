@@ -4,6 +4,9 @@ BBDM/
 # Dataset
 data/
 
+# Output
+logs/
+
 # macOS Metadata
 .DS_Store
 
