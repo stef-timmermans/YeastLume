@@ -5,7 +5,6 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
-#SBATCH --gres=gpu:v100:1
 #SBATCH --mem=4G
 #SBATCH --time=00:15:00
 #SBATCH --output=logs/bbdm_debug_train_%j.out

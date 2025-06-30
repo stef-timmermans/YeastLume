@@ -6,7 +6,6 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --gres=gpu:v100:1
 #SBATCH --mem=32G
 #SBATCH --time=24:00:00
 #SBATCH --output=logs/bbdm_yeast_train_%j.out
