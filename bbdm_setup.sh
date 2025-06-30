@@ -9,8 +9,9 @@ DATA_DIR="$(pwd)/data"
 export DATA_DIR
 echo "✅ Set DATA_DIR to $DATA_DIR"
 
-# Overwrite the BBDM template file target input data paths
+# Overwrite the BBDM template files target input data paths
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-BBDM.yaml
+sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
 echo "✅ Updated dataset_path in Template-BBDM.yaml"
 
 # Clone the diffusion model
