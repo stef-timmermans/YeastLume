@@ -102,7 +102,7 @@ model:
       max_var: 1.0 # maximum variance
 
       UNetParams:
-        image_size: 512
+        image_size: 128
         in_channels: 3
         model_channels: 128
         out_channels: 3
