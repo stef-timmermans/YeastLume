@@ -46,7 +46,7 @@ echo ""
 
 # Launch training
 python3 main.py \
-  --config configs/Template-BBDM.yaml \
+  --config configs/Template-LBBDM-f4.yaml \
   --train \
   --sample_at_start \
   --save_top \
