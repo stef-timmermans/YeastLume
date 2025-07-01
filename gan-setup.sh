@@ -7,15 +7,22 @@ echo "✅ Starting taming-transformers setup..."
 # Create the .txt data info files
 find "$(pwd)/data/train/B" -name "*.png" > fluorescence_train.txt
 find "$(pwd)/data/test/B" -name "*.png" > fluorescence_test.txt
+echo "✅ Wrote image list files"
 
 # Overwrite the taming-transformers template file .txt file paths
 sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_train.txt|" custom_vqgan.yaml
 sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_test.txt|" custom_vqgan.yaml
+echo "✅ Updated image list file paths in custom_vqgan.yaml"
 
 # Clone the VQGAN model
 # https://github.com/CompVis/taming-transformers
 git clone https://github.com/CompVis/taming-transformers.git
 echo "✅ Cloned taming-transformers repository"
+
+# Overwrite the taming-transformers model instruction template
+cp custom_vqgan.yaml taming-transformers/configs/
+cd taming-transformers
+echo "✅ Moved custom_vqgan.yaml; changed into taming-transformers directory"
 
 # Install Conda
 module purge
@@ -26,7 +33,7 @@ echo "✅ Loaded Anaconda module with Conda version: $(conda --version)"
 conda create -n taming python=3.8.5 -y
 echo "✅ Created taming Conda environment with Python 3.8.5"
 conda activate taming
-conda env update --file custom_vqgan.yaml --prune
-echo "✅ Updated taming environment using custom_vqgan.yaml"
+conda env update --file environment.yaml --prune
+echo "✅ Updated taming environment using environment.yaml"
 
 echo "✅ taming-transformers setup complete!"

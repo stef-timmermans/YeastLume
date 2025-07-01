@@ -12,14 +12,14 @@ echo "✅ Set DATA_DIR to $DATA_DIR"
 # Overwrite the BBDM template files target input data paths
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-BBDM.yaml
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
-echo "✅ Updated dataset_path in Template-BBDM.yaml"
+echo "✅ Updated dataset_path in Template-BBDM yaml files"
 
 # Clone the diffusion model
 # https://github.com/xuekt98/BBDM
 git clone https://github.com/xuekt98/BBDM.git
 echo "✅ Cloned BBDM repository"
 
-# Overwrite the BBDM environment file and model instruction template
+# Overwrite the BBDM environment file and model instruction templates
 cp environment.yml BBDM/
 cp Template-BBDM.yaml BBDM/configs/
 cp Template-LBBDM-f4.yaml BBDM/configs/
@@ -39,7 +39,7 @@ echo "✅ Loaded Anaconda module with Conda version: $(conda --version)"
 conda create -n BBDM python=3.9.16 -y
 echo "✅ Created BBDM Conda environment with Python 3.9.16"
 conda activate BBDM
-conda env update --file bbdm-environment.yml --prune
-echo "✅ Updated BBDM environment using bbdm-environment.yml"
+conda env update --file environment.yml --prune
+echo "✅ Updated BBDM environment using environment.yml"
 
 echo "✅ BBDM setup complete!"
