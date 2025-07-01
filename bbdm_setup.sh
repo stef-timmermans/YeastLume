@@ -39,7 +39,7 @@ echo "✅ Loaded Anaconda module with Conda version: $(conda --version)"
 conda create -n BBDM python=3.9.16 -y
 echo "✅ Created BBDM Conda environment with Python 3.9.16"
 conda activate BBDM
-conda env update --file environment.yml --prune
-echo "✅ Updated BBDM environment using environment.yml"
+conda env update --file bbdm-environment.yml --prune
+echo "✅ Updated BBDM environment using bbdm-environment.yml"
 
 echo "✅ BBDM setup complete!"
