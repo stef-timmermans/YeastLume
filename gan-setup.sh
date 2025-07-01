@@ -5,8 +5,12 @@ set -e
 echo "✅ Starting taming-transformers setup..."
 
 # Create the .txt data info files
-find "$HOME/YeastLume/data/train/B" -name "*.png" > fluorescence_train.txt
-find "$HOME/YeastLume/data/test/B" -name "*.png" > fluorescence_test.txt
+find "$(pwd)/data/train/B" -name "*.png" > fluorescence_train.txt
+find "$(pwd)/data/test/B" -name "*.png" > fluorescence_test.txt
+
+# Overwrite the taming-transformers template file .txt file paths
+sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_train.txt|" custom_vqgan.yaml
+sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_test.txt|" custom_vqgan.yaml
 
 # Clone the VQGAN model
 # https://github.com/CompVis/taming-transformers

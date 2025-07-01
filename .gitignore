@@ -1,5 +1,10 @@
 # Utilized repositories
 BBDM/
+taming-transformers/
+
+# taming-transformers sensitive input
+fluorescence_test.txt
+fluorescence_train.txt
 
 # Dataset
 data/
