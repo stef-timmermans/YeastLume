@@ -5,18 +5,20 @@ Repository for the YeastLume data pipeline. Follow the directions below to confi
 Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data.
 
 ### Local Requirements
+- 512x512 .tif data
 - Python 3.11+
-- Rclone *(if pushing data)*
+- Rclone *(if pushing/pulling data)*
 
 ### Remote Requirements
 - SLURM job scheduler
 - Unix/Linux shell with CUDA GPU available
 - Conda (using Python 3.9.16)
+- Rclone *(if pushing/pulling data)*
 
 ---
 
 ## 1. Setup Data Preparation
-Run the data loading setup script for the repository.
+Run the data loading setup script for YeastLume's data preparation.
 
 ```shell
 ./preprocessing_setup.sh
@@ -25,9 +27,9 @@ Run the data loading setup script for the repository.
 ---
 
 ## 2. Data Preparation and Preprocessing
-BBDM expects data in a particular format to train, validate, and test the model. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
+BBDM expects data in a particular format for training, validating, and testing. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
 
-1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your `.tif` files. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your `.tif` files of `512x512` frames. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
 2. Run the preprocessing script.
 ```shell
 ./preprocessing.sh
@@ -38,7 +40,7 @@ BBDM expects data in a particular format to train, validate, and test the model.
 ---
 
 ## 3. Remote Data Hosting via Rclone
-Hosting the training data can be done via any service; however, this project was developed using Rclone—University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork** of the repository:
+Hosting the training data can be done via any service; however, this project was developed using Rclone—University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork (or copy)* of the repository:
 
 1. Create a new Google Cloud Platform project.
 2. Under "APIs and Services" → "Enabled APIs & services", click "+ Enable APIs and services" and search for and enable the Google Drive API.
@@ -71,7 +73,7 @@ rclone copy -P gdrive:YeastLume/data/ data/
 ./bbdm_setup.sh
 ```
 
-3. Run the model training script via a dedicated job.
+3. Run the model training script via a dedicated job. This uses the `Template-LBBDM-f4.yaml` template (latent space BBDM with a latent depth 4).
 ```shell
 sbatch train_bbdm_job.sh
 ```
@@ -79,7 +81,11 @@ sbatch train_bbdm_job.sh
 *In the event of failure, a smaller test job can be run via `sbatch train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 
-4. TBD...
+4. Push the model training output to remote for safekeeping (you can use a more specific filepath if you wish to exclude unnecessary data).
+```shell
+module load rclone/1.66.0
+rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
+```
 
 ---
 
