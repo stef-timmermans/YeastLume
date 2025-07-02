@@ -6,7 +6,7 @@ model:
     n_embed: 1024
     ddconfig:
       double_z: False
-      z_channels: 256
+      z_channels: 3
       resolution: 512
       in_channels: 3
       out_ch: 3
