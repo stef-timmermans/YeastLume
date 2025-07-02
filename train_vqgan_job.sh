@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=vqgan-yeast-train
-#SBATCH --gpus-per-node=v100:2
+#SBATCH --gpus-per-node=v100:1
 #SBATCH --partition=gpulong
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -48,6 +48,6 @@ echo ""
 python main.py \
   --base configs/custom_vqgan.yaml \
   -t True \
-  --gpus 0,1
+  --gpus 0,
 
 echo "Training finished at: $(date)"
