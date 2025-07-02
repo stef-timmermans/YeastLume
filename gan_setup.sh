@@ -36,4 +36,7 @@ conda activate taming
 conda env update --file environment.yaml --prune
 echo "✅ Updated taming environment using environment.yaml"
 
+pip install Pillow==9.5.0
+echo "✅ Updated manual environment fixes (Pillow)"
+
 echo "✅ taming-transformers setup complete!"
