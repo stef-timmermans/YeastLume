@@ -6,12 +6,12 @@ echo "✅ Starting taming-transformers setup..."
 
 # Create the .txt data info files
 find "$(pwd)/data/train/B" -name "*.png" > fluorescence_train.txt
-find "$(pwd)/data/test/B" -name "*.png" > fluorescence_test.txt
+find "$(pwd)/data/val/B" -name "*.png" > fluorescence_val.txt
 echo "✅ Wrote image list files"
 
 # Overwrite the taming-transformers template file .txt file paths
 sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_train.txt|" custom_vqgan.yaml
-sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_test.txt|" custom_vqgan.yaml
+sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_val.txt|" custom_vqgan.yaml
 echo "✅ Updated image list file paths in custom_vqgan.yaml"
 
 # Clone the VQGAN model

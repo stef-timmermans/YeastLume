@@ -3,8 +3,8 @@ BBDM/
 taming-transformers/
 
 # taming-transformers sensitive input
-fluorescence_test.txt
 fluorescence_train.txt
+fluorescence_val.txt
 
 # Dataset
 data/
