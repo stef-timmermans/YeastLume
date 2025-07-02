@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=vqgan-yeast-train
-#SBATCH --gpus-per-node=a100:1
+#SBATCH --gpus-per-node=v100:1
 #SBATCH --partition=gpulong
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
