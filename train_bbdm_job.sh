@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=bbdm-yeast-train
-#SBATCH --gpus-per-node=a100:1
+#SBATCH --gpus-per-node=a100:2
 #SBATCH --partition=gpulong
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -50,6 +50,6 @@ python3 main.py \
   --train \
   --sample_at_start \
   --save_top \
-  --gpu_ids 0
+  --gpu_ids 0,1
 
 echo "Training finished at: $(date)"
