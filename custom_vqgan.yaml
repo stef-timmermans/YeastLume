@@ -2,15 +2,15 @@ model:
   base_learning_rate: 4.5e-6
   target: taming.models.vqgan.VQModel
   params:
-    embed_dim: 128
-    n_embed: 512
+    embed_dim: 3
+    n_embed: 8192
     ddconfig:
       double_z: False
       z_channels: 3
       resolution: 512
       in_channels: 3
       out_ch: 3
-      ch: 64
+      ch: 128
       ch_mult: [ 1,2,4]  # num_down = len(ch_mult)-1
       num_res_blocks: 2
       attn_resolutions: []

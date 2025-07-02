@@ -57,7 +57,7 @@ model:
       embed_dim: 3
       n_embed: 8192
       ddconfig:
-        double_z: false
+        double_z: False
         z_channels: 3
         resolution: 512
         in_channels: 3
