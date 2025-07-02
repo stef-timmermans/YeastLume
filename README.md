@@ -60,25 +60,50 @@ rclone copy -P data/ gdrive:YeastLume/data/
 
 ---
 
-## 4. Training the Model
-With the training set successfully created, use it to build the BBDM model weights.
+## 4. Training the VQGAN
+BBDM expects a VQGAN checkpoint as input to the model. [The repository links options in its "Pretrained Models" section](https://github.com/xuekt98/BBDM). You can follow their instructions to find an appropriate checkpoint (VQGAN-4, by default).
 
-1. Pull the model input data from remote (if preprocessing was done on a different machine).
+However, in order to maximize the efficacy of BBDM, it is also possible to train a new VQGAN to learn to reconstruct the fluorescence images in `data/train/B`. The model does not have access to the test set. Prepare the model with the following steps:
+
+1. Pull the model input data from remote (if necessary).
 ```shell
 module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
 ```
-2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script is developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
+
+2. Configure the Conda environment for the model ([taming-transformers](https://github.com/CompVis/taming-transformers/)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
+```shell
+./gan_setup.sh
+```
+
+3. Run the model training script via a dedicated job. This uses the `custom_vqgan.yaml` template.
+```shell
+sbatch job-scripts/train_vqgan_job.sh
+```
+
+*In the event of failure, a smaller test job can be run via `sbatch job-scripts/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
+
+
+## 5. Training the BBDM Model
+With a checkpoint to a VQGAN, train the BBDM model with the following steps:
+
+1. Pull the model input data from remote (if necessary).
+```shell
+module load rclone/1.66.0
+rclone copy -P gdrive:YeastLume/data/ data/
+```
+
+2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
 ```shell
 ./bbdm_setup.sh
 ```
 
 3. Run the model training script via a dedicated job. This uses the `Template-LBBDM-f4.yaml` template (latent space BBDM with a latent depth 4).
 ```shell
-sbatch train_bbdm_job.sh
+sbatch job-scripts/train_bbdm_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
+*In the event of failure, a smaller test job can be run via `sbatch job-scripts/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 
 4. Push the model training output to remote for safekeeping (you can use a more specific filepath if you wish to exclude unnecessary data).
@@ -93,12 +118,12 @@ rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
 
 Note via [the Remote Data Hosting via Rclone section](#3-remote-data-hosting-via-rclone) that these steps are optional and are only needed if sharing a single Google Drive data setup.
 
-11. Rename the JSON file in [`/accounts`](./accounts) to `drive.json`. 
-12. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`/accounts`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
+1. Rename the JSON file in [`/accounts`](./accounts) to `drive.json`. 
+2. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`/accounts`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
 ```shell
 ./accounts/encrypt.sh
 ```
-13. When running in a different copy of the repository, bring a copy of the correct `key` back into [`/accounts`](./accounts) manually, and run the decryption script.
+3. When running in a different copy of the repository, bring a copy of the correct `key` back into [`/accounts`](./accounts) manually, and run the decryption script.
 ```shell
 ./accounts/decrypt.sh
 ```
