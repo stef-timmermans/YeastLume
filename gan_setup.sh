@@ -24,6 +24,10 @@ cp custom_vqgan.yaml taming-transformers/configs/
 cd taming-transformers
 echo "✅ Moved custom_vqgan.yaml; changed into taming-transformers directory"
 
+# Remote tracking from sub-repository
+rm -rf .git
+echo "✅ Removed tracking from taming-transformers"
+
 # Install Conda
 module purge
 module load Anaconda3/2024.02-1
