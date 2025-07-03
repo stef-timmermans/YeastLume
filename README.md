@@ -5,7 +5,7 @@ Repository for the YeastLume data pipeline. Follow the directions below to confi
 Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data.
 
 ### Local Requirements
-- 512x512 .tif data
+- 512x512 multi-channel .tif films
 - Python 3.11+
 - Rclone *(if pushing/pulling data)*
 
@@ -29,7 +29,7 @@ Run the data loading setup script for YeastLume's data preparation.
 ## 2. Data Preparation and Preprocessing
 BBDM expects data in a particular format for training, validating, and testing. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
 
-1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your `.tif` files of `512x512` frames. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your multi-channel `.tif` files of `512x512` films. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
 2. Run the preprocessing script.
 ```shell
 ./scripts/preprocessing.sh
