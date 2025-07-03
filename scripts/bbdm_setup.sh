@@ -9,8 +9,7 @@ DATA_DIR="$(pwd)/data"
 export DATA_DIR
 echo "✅ Set DATA_DIR to $DATA_DIR"
 
-# Overwrite the BBDM template files target input data paths
-sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-BBDM.yaml
+# Overwrite the BBDM template file target input data path
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
 echo "✅ Updated dataset_path in Template-BBDM yaml files"
 
@@ -21,10 +20,9 @@ echo "✅ Cloned BBDM repository"
 
 # Overwrite the BBDM environment file and model instruction templates
 cp environment.yml BBDM/
-cp Template-BBDM.yaml BBDM/configs/
 cp Template-LBBDM-f4.yaml BBDM/configs/
 cd BBDM
-echo "✅ Moved environment.yml, Template-BBDM.yaml; changed into BBDM directory"
+echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml; changed into BBDM directory"
 
 # Remote tracking from sub-repository
 rm -rf .git
