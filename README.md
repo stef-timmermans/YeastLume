@@ -21,7 +21,7 @@ Below are instructions on how to train a BBDM model with paired bright-field and
 Run the data loading setup script for YeastLume's data preparation.
 
 ```shell
-./preprocessing_setup.sh
+./scripts/preprocessing_setup.sh
 ```
 
 ---
@@ -32,10 +32,10 @@ BBDM expects data in a particular format for training, validating, and testing. 
 1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your `.tif` files of `512x512` frames. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
 2. Run the preprocessing script.
 ```shell
-./preprocessing.sh
+./scripts/preprocessing.sh
 ```
 
-*Note this script does not save notebook output other than the created data directory. In the event of errors, see Line 9 of [`preprocessing.sh`](preprocessing.sh).*
+*Note this script does not save notebook output other than the created data directory. In the event of errors, see Line 9 of [`preprocessing.sh`](scripts/preprocessing.sh).*
 
 ---
 
@@ -73,15 +73,15 @@ rclone copy -P gdrive:YeastLume/data/ data/
 
 2. Configure the Conda environment for the model ([taming-transformers](https://github.com/CompVis/taming-transformers/)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
 ```shell
-./gan_setup.sh
+./scripts/gan_setup.sh
 ```
 
 3. Run the model training script via a dedicated job. This uses the `custom_vqgan.yaml` template.
 ```shell
-sbatch job-scripts/train_vqgan_job.sh
+sbatch scripts/jobs/train_vqgan_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch job-scripts/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 
 ## 5. Training the BBDM Model
@@ -95,15 +95,15 @@ rclone copy -P gdrive:YeastLume/data/ data/
 
 2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
 ```shell
-./bbdm_setup.sh
+./scripts/bbdm_setup.sh
 ```
 
 3. Run the model training script via a dedicated job. This uses the `Template-LBBDM-f4.yaml` template (latent space BBDM with a latent depth 4).
 ```shell
-sbatch job-scripts/train_bbdm_job.sh
+sbatch scripts/jobs/train_bbdm_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch job-scripts/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 
 4. Push the model training output to remote for safekeeping (you can use a more specific filepath if you wish to exclude unnecessary data).
