@@ -11,13 +11,12 @@ echo "✅ Set DATA_DIR to $DATA_DIR"
 
 # Set the VQGAN checkpoint working directory
 VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
-VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
 echo "✅ Set VQGAN_DIR to $VQGAN_DIR"
 
 # Overwrite the BBDM template file target input data and checkpoint path
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
 sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4.yaml
-echo "✅ Updated dataset_path in Template-BBDM yaml files"
+echo "✅ Updated dataset_path in Template-BBDM intermediate yaml file"
 
 # Clone the diffusion model
 # https://github.com/xuekt98/BBDM
@@ -27,6 +26,10 @@ echo "✅ Cloned BBDM repository"
 # Overwrite the BBDM environment file and model instruction templates
 cp environment.yml BBDM/
 cp Template-LBBDM-f4.yaml BBDM/configs/
+
+# Revert root template to prevent committing user paths
+git checkout -- Template-LBBDM-f4.yaml
+
 cd BBDM
 echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml; changed into BBDM directory"
 

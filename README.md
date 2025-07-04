@@ -71,7 +71,7 @@ module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
 ```
 
-2. Configure the Conda environment for the model ([taming-transformers](https://github.com/CompVis/taming-transformers/)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
+2. Configure the Conda environment for the model ([taming-transformers](https://github.com/CompVis/taming-transformers/)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any changes to `custom_vqgan.yaml` beforehand.
 ```shell
 ./scripts/gan_setup.sh
 ```
@@ -100,7 +100,7 @@ rclone copy -P gdrive:YeastLume/data/ data/
 rclone copy gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
 ```
 
-2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
+2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any changes to `environment.yml` beforehand.
 ```shell
 ./scripts/bbdm_setup.sh
 ```
