@@ -1,6 +1,6 @@
 # NOTICE
 
-The [`custom_vqgan.yaml`](custom_vqgan.yaml) file in this directory is derived from the [taming-transformers repository](https://github.com/CompVis/taming-transformers/tree/master) (under the MIT License).
+The [`custom_vqgan.yaml`](custom_vqgan.yaml) file in this directory is derived from the [taming-transformers repository](https://github.com/CompVis/taming-transformers/tree/master) (under the MIT License). The full `taming-transformers` repository is utilized by YeastLume, though it is ignored by tracking.
 
 ### Source MIT License:
 
@@ -28,7 +28,7 @@ OR OTHER DEALINGS IN THE SOFTWARE./
 
 ---
 
-The [`environment.yml`](environment.yml) and `Template-LBBDM-f4.yaml` files in this directory are derived from the [BBDM repository](https://github.com/xuekt98/BBDM) (under the MIT License).
+The [`environment.yml`](environment.yml) and `Template-LBBDM-f4.yaml` files in this directory are derived from the [BBDM repository](https://github.com/xuekt98/BBDM) (under the MIT License). The full `BBDM` repository is utilized by YeastLume, though it is ignored by tracking.
 
 ### Source MIT License:
 
