@@ -1,4 +1,4 @@
-This directory loads the paired image data required for the BBDM model. Specifically, it creates sets of data in the project root (in [`/data`](../data)), in the following format:
+This directory loads the paired image data required for the BBDM model. Specifically, it creates sets of data in the project root (in [`data/`](../data)), in the following format:
 ```
 data/train/A    # training reference (bright-field)
 data/train/B    # training ground truth (fluorescence)

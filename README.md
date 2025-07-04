@@ -5,14 +5,14 @@ Repository for the YeastLume data pipeline. Follow the directions below to confi
 Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data.
 
 ### Local Requirements
-- 512x512 multi-channel .tif films
-- Python 3.11+
+- 512x512 three-channel .tif films
+- Python 3.11+ (with pip)
 - Rclone *(if pushing/pulling data)*
 
 ### Remote Requirements
 - SLURM job scheduler
 - Unix/Linux shell with CUDA GPU available
-- Conda (using Python 3.9.16)
+- Conda (via Anaconda3/2024.02-1)
 - Rclone *(if pushing/pulling data)*
 
 ---
@@ -49,7 +49,7 @@ Hosting the training data can be done via any service; however, this project was
 5. Under "Google Auth Platform" → "Audience", add yourself as a test user (**ensure the GCP project, your Google Drive, and test user are all the same account**).
 6. Under "APIs and Services" → "Credentials", click "+ Create credentials" and select for an OAuth Client ID of type "Desktop app".
 7. From the pop-up, download the provided JSON from the bottom-left button.
-8. Move the created JSON file into [`/accounts`](./accounts) for convenience. It should automatically be ignored from tracking at this point.
+8. Move the created JSON file into [`accounts/`](./accounts) for convenience. It should automatically be ignored from tracking at this point.
 9. Follow the [University of Groningen Hábrók documentation](https://wiki.hpc.rug.nl/habrok/data_management/google_drive) (or a substitute host supporting Rclone), specifically the section *"Loading and configuring the application"*. Copy the appropriate variable names from the Google Cloud Project JSON file and authenticate. Name the remote `gdrive`. This configuration should be done on each machine Rclone is used to push and pull data.
 10. Push the model input data to remote (if training the model on a different machine).
 ```shell
@@ -83,7 +83,7 @@ sbatch scripts/jobs/train_vqgan_job.sh
 
 *In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
-Train the VQGAN until results are as desired (the model will plateau in performance). Then the checkpoint to remote for safekeeping and the related training and validation images, if desired. These commands assume only one log exists. To push to remote otherwise, populate the expanded subpath manually.
+Train the VQGAN until results are as desired (the model will plateau in performance). Then the checkpoint to remote for safekeeping along with the related training and validation images, if desired. These commands assume only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
 ```shell
 module load rclone/1.66.0
 rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/checkpoints gdrive:YeastLume/VQGAN/checkpoints
@@ -93,7 +93,7 @@ rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/images gdrive:Yea
 ## 5. Training the BBDM Model
 With a checkpoint to a VQGAN, train the BBDM model with the following steps:
 
-1. Pull the model input data from remote (if necessary), as well as the VQGAN checkpoint (if not using pretrained).
+1. Pull the model input data and the VQGAN checkpoint from remote (if necessary). Please note that the BBDM model expects the VQGAN `last.ckpt` checkpoint file under [`checkpoints/VQGAN/`](checkpoints/VQGAN/). If this file is not present, the model will fail to begin training.
 ```shell
 module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
@@ -113,7 +113,7 @@ sbatch scripts/jobs/train_bbdm_job.sh
 *In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 
-4. Push the model training output to remote for safekeeping (you can use a more specific filepath if you wish to exclude unnecessary data).
+4. Push the model training output to remote for safekeeping (use a more specific source filepath if you wish to exclude unnecessary data).
 ```shell
 module load rclone/1.66.0
 rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
@@ -125,12 +125,12 @@ rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
 
 Note via [the Remote Data Hosting via Rclone section](#3-remote-data-hosting-via-rclone) that these steps are optional and are only needed if sharing a single Google Drive data setup.
 
-1. Rename the JSON file in [`/accounts`](./accounts) to `drive.json`. 
-2. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`/accounts`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
+1. Rename the JSON file in [`accounts/`](./accounts) to `drive.json`. 
+2. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`accounts/`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
 ```shell
 ./accounts/encrypt.sh
 ```
-3. When running in a different copy of the repository, bring a copy of the correct `key` back into [`/accounts`](./accounts) manually, and run the decryption script.
+3. When running in a different copy of the repository, bring a copy of the correct `key` back into [`accounts/`](./accounts) manually, and run the decryption script.
 ```shell
 ./accounts/decrypt.sh
 ```
