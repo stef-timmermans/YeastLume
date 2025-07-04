@@ -83,14 +83,21 @@ sbatch scripts/jobs/train_vqgan_job.sh
 
 *In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
+Train the VQGAN until results are as desired (the model will plateau in performance). Then the checkpoint to remote for safekeeping and the related training and validation images, if desired. These commands assume only one log exists. To push to remote otherwise, populate the expanded subpath manually.
+```shell
+module load rclone/1.66.0
+rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/checkpoints gdrive:YeastLume/VQGAN/checkpoints
+rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/images gdrive:YeastLume/VQGAN/images
+```
 
 ## 5. Training the BBDM Model
 With a checkpoint to a VQGAN, train the BBDM model with the following steps:
 
-1. Pull the model input data from remote (if necessary).
+1. Pull the model input data from remote (if necessary), as well as the VQGAN checkpoint (if not using pretrained).
 ```shell
 module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
+rclone copy gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
 ```
 
 2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.

@@ -53,7 +53,7 @@ model:
 
   VQGAN:
     params:
-      ckpt_path: null
+      ckpt_path: 'OVERWRITTEN_BY_BBDM_SETUP_SH'
       embed_dim: 3
       n_embed: 8192
       ddconfig:

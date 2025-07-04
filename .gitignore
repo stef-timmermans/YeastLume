@@ -9,6 +9,9 @@ fluorescence_val.txt
 # Dataset
 data/
 
+# Checkpoints
+checkpoints/
+
 # Output
 logs/
 

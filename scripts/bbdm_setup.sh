@@ -9,8 +9,14 @@ DATA_DIR="$(pwd)/data"
 export DATA_DIR
 echo "✅ Set DATA_DIR to $DATA_DIR"
 
-# Overwrite the BBDM template file target input data path
+# Set the VQGAN checkpoint working directory
+VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
+VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
+echo "✅ Set VQGAN_DIR to $VQGAN_DIR"
+
+# Overwrite the BBDM template file target input data and checkpoint path
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
+sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4.yaml
 echo "✅ Updated dataset_path in Template-BBDM yaml files"
 
 # Clone the diffusion model
