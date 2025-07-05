@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --time=48:00:00
+#SBATCH --time=4:00:00
 #SBATCH --output=logs/bbdm_yeast_train_%j.out
 #SBATCH --error=logs/bbdm_yeast_train_%j.err
 
