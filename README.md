@@ -90,6 +90,7 @@ module load rclone/1.66.0
 rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/checkpoints gdrive:YeastLume/VQGAN/checkpoints
 rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/images gdrive:YeastLume/VQGAN/images
 ```
+---
 
 ## 5. Training the BBDM Model
 With a checkpoint to a VQGAN, train the BBDM model with the following steps:
@@ -136,6 +137,12 @@ module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
 rclone copy -P gdrive:YeastLume/data-unseen/ data-unseen/
 ```
+
+2. Pull the best BBDM checkpoint from remote manually. For example, to clone epoch 100, do: `rclone copy -P gdrive:YeastLume/BBDM/results/YeastLume/LBBDM-f4/checkpoint/top_model_epoch_100.pth checkpoints/BBDM`. The name of the checkpoint can be examined on Google Drive.
+
+# Supplementary Install Information
+
+---
 
 ## Remote Data Hosting via Rclone (cont.)
 
