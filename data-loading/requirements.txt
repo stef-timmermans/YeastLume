@@ -6,3 +6,4 @@ scikit-image~=0.24.0
 jupyter
 scipy~=1.13.1
 dvc[gdrive]
+nbstripout
