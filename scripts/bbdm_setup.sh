@@ -47,7 +47,7 @@ git checkout -- Template-LBBDM-f4.yaml
 git checkout -- Template-LBBDM-f4-unseen.yaml
 
 cd BBDM
-echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml, Template-LBBDM-f4-unseen.yaml; changed into BBDM directory"
+echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml, Template-LBBDM-f4-unseen.yaml; reverted repo root git changes; changed into BBDM directory"
 
 # Remote tracking from sub-repository
 rm -rf .git
