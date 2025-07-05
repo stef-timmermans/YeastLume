@@ -29,7 +29,7 @@ echo "✅ Updated ckpt_path in BBDM yamls"
 # Clone the diffusion model if it doesn't already exist
 # https://github.com/xuekt98/BBDM
 if [ -d "BBDM" ]; then
-    echo "⚠️ BBDM directory already exists; skipping clone"
+    echo "⚠️BBDM directory already exists; skipping clone"
 else
     git clone https://github.com/xuekt98/BBDM.git
     echo "✅ Cloned BBDM repository"

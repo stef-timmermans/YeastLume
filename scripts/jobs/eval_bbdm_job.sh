@@ -66,6 +66,7 @@ echo "Evaluation on same-file frames finished at: $(date)"
 echo ""
 
 echo "Sleeping for 10 seconds to prevent model errors..."
+echo ""
 sleep 10
 
 # Launch inter .tif file evaluation
