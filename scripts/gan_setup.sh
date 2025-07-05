@@ -14,10 +14,14 @@ sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images
 sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_val.txt|" custom_vqgan.yaml
 echo "✅ Updated image list file paths in custom_vqgan intermediate yaml file"
 
-# Clone the VQGAN model
+# Clone the VQGAN model if it doesn't already exist
 # https://github.com/CompVis/taming-transformers
-git clone https://github.com/CompVis/taming-transformers.git
-echo "✅ Cloned taming-transformers repository"
+if [ -d "taming-transformers" ]; then
+    echo "⚠️ taming-transformers directory already exists; skipping clone"
+else
+    git clone https://github.com/CompVis/taming-transformers.git
+    echo "✅ Cloned taming-transformers repository"
+fi
 
 # Overwrite the taming-transformers model instruction template
 cp custom_vqgan.yaml taming-transformers/configs/

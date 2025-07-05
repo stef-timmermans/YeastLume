@@ -24,12 +24,16 @@ echo "✅ Updated dataset_path in BBDM yamls"
 
 sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4.yaml
 sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4-unseen.yaml
-echo "✅ Updated ckpt_path in BBDM yaml yamls"
+echo "✅ Updated ckpt_path in BBDM yamls"
 
-# Clone the diffusion model
+# Clone the diffusion model if it doesn't already exist
 # https://github.com/xuekt98/BBDM
-git clone https://github.com/xuekt98/BBDM.git
-echo "✅ Cloned BBDM repository"
+if [ -d "BBDM" ]; then
+    echo "⚠️ BBDM directory already exists; skipping clone"
+else
+    git clone https://github.com/xuekt98/BBDM.git
+    echo "✅ Cloned BBDM repository"
+fi
 
 # Overwrite the BBDM environment files and model instruction templates
 cp environment.yml BBDM/
