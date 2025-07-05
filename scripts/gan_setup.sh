@@ -37,6 +37,9 @@ module purge
 module load Anaconda3/2024.02-1
 echo "✅ Loaded Anaconda module with Conda version: $(conda --version)"
 
+# Remove the taming environment if it already exists
+conda env remove -n taming -y
+
 # Set up the taming environment
 conda create -n taming python=3.8.5 -y
 echo "✅ Created taming Conda environment with Python 3.8.5"

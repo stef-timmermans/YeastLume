@@ -29,8 +29,8 @@ Run the data loading setup script for YeastLume's data preparation.
 ## 2. Data Preparation and Preprocessing
 BBDM expects data in a particular format for training, validating, and testing. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
 
-1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your multi-channel `.tif` files of `512x512` films. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
-2. Run the preprocessing script.
+1. Populate the [`data-loading/raw-data`](data-loading/raw-data) and [`data-loading/unseen-raw-data`](data-loading/unseen-raw-data) directories with your (unique) multi-channel `.tif` files of `512x512` films. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+2. Run the preprocessing script to automatically create the respective data folders.
 ```shell
 ./scripts/preprocessing.sh
 ```
@@ -54,6 +54,7 @@ Hosting the training data can be done via any service; however, this project was
 10. Push the model input data to remote (if training the model on a different machine).
 ```shell
 rclone copy -P data/ gdrive:YeastLume/data/
+rclone copy -P data-unseen/ gdrive:YeastLume/data-unseen/
 ```
 
 *Optional steps if involving multiple researchers/developers are included at the bottom of this document under [Remote Data Hosting via Rclone (cont.)](#remote-data-hosting-via-rclone-cont)*.
@@ -123,13 +124,18 @@ rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
 
 ## Running Inference on the BBDM Model
 
-With the BBDM model trained, inference can be ran on a selected checkpoint via two different test sets for evaluation.
+With the BBDM model trained, inference can be run on a selected checkpoint via two different test sets for evaluation.
 
 The first is on data from the same `.tif` movies as the training and validation data, albeit from unseen individual frames.
 
 The second test set is from unseen `.tif` movies. This set can be used to evaluate how the model performs in similar, but not exact conditions as the training data.
 
-1. Move the BBDM checkpoint of your 
+1. Pull both sets of remote data (if necessary).
+```shell
+module load rclone/1.66.0
+rclone copy -P gdrive:YeastLume/data/ data/
+rclone copy -P gdrive:YeastLume/data-unseen/ data-unseen/
+```
 
 ## Remote Data Hosting via Rclone (cont.)
 
