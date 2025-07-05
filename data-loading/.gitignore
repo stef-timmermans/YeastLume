@@ -3,5 +3,7 @@ example-data/*
 !example-data/README.md
 raw-data/*
 !raw-data/README.md
+unseen-raw-data/*
+!unseen-raw-data/README.md
 formatted-frame-pairs/*
 test.png
