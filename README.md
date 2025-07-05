@@ -121,6 +121,16 @@ rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
 
 ---
 
+## Running Inference on the BBDM Model
+
+With the BBDM model trained, inference can be ran on a selected checkpoint via two different test sets for evaluation.
+
+The first is on data from the same `.tif` movies as the training and validation data, albeit from unseen individual frames.
+
+The second test set is from unseen `.tif` movies. This set can be used to evaluate how the model performs in similar, but not exact conditions as the training data.
+
+1. Move the BBDM checkpoint of your 
+
 ## Remote Data Hosting via Rclone (cont.)
 
 Note via [the Remote Data Hosting via Rclone section](#3-remote-data-hosting-via-rclone) that these steps are optional and are only needed if sharing a single Google Drive data setup.
