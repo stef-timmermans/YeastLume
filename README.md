@@ -1,8 +1,9 @@
 # YeastLume
-Repository for the YeastLume data pipeline. Follow the directions below to configure the repository for your own purposes.
+
+YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference and evaluation.
 
 # Installation and Use
-Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data.
+Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data. Steps 1 and 2 assume a local, unix-based environment (e.g., macOS), and the remaining steps assume use on a high-performance cluster (e.g., Hábrók).
 
 ### Local Requirements
 - 512x512 three-channel .tif films
@@ -102,7 +103,7 @@ rclone copy -P gdrive:YeastLume/data/ data/
 rclone copy gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
 ```
 
-2. Configure the Conda environment for the model ([BBDM](https://github.com/xuekt98/BBDM)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any changes to `environment.yml` beforehand.
+2. Configure the Conda environment for the BBDM model. This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any changes to `environment.yml` beforehand.
 ```shell
 ./scripts/bbdm_setup.sh
 ```
@@ -123,7 +124,7 @@ rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
 
 ---
 
-## Running Inference on the BBDM Model
+## 6. Running Inference on the BBDM Model
 
 With the BBDM model trained, inference can be run on a selected checkpoint via two different test sets for evaluation.
 
@@ -153,10 +154,22 @@ mkdir -p data-unseen/val/B
 sbatch scripts/jobs/eval_seen_bbdm_job.sh
 ```
 
-5. Run metrics on the supplied images.
+5. Run metrics on the supplied images. PSNR and SSIM measure reconstruction fidelity and structural similarity between predicted and ground-truth fluorescence images, while MSE captures pixel-wise error.
+Lower PSNR and SSIM, along with higher MSE on the unseen set, indicate the model has overfit to the training data.
 ```shell
 ./scripts/metrics_setup.sh
 ./scripts/metrics.sh
+```
+
+---
+
+## 7. Binary Nuclei Mask Generation
+
+From the evaluation output fluorescence frames, utilize [Cellpose](https://github.com/MouseLand/cellpose) to create 512x512 binary nuclei masks to aid downstream segmentation.
+
+1. Configure the Conda environment for the Cellpose model. This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
+```shell
+./scripts/cellpose_setup.sh
 ```
 
 # Supplementary Install Information
