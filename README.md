@@ -4,6 +4,9 @@
 
 YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose)).
 
+![YeastLume Pipeline](media/yeastlume-pipeline.png)
+*Starting from multi-channel .tif microscopy movies, the pipeline extracts frame pairs, translates bright-field frames into synthetic fluorescence using a trained BBDM, and segments the resulting images using Cellpose, returning nuclei binary masks.*
+
 ---
 
 ## 🚧 Next Steps / Limitations
@@ -51,6 +54,10 @@ Below are instructions on how to train a BBDM model with paired bright-field and
 
 ---
 
+![Training Process](media/yeastlume-training.png)
+*Raw .tif movies are split into paired datasets (bright-field and fluorescence), each subdivided into training, validation, and test sets. The VQGAN learns a latent representation of the fluorescence images, and the BBDM is trained to generate these representations from bright-field inputs.*
+
+
 ## 1. Setup Data Preparation
 Run the data loading setup script for YeastLume's data preparation.
 
@@ -74,7 +81,7 @@ BBDM expects data in a particular format for training, validating, and testing. 
 ---
 
 ## 3. Remote Data Hosting via Rclone
-Hosting the training data can be done via any service; however, this project was developed using Rclone—the University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork (or copy)** of the repository:
+Hosting the training data can be done via any service; however, this project was developed using Rclone—the University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly set up Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork (or copy)** of the repository:
 
 1. Create a new Google Cloud Platform project.
 2. Under "APIs and Services" → "Enabled APIs & services", click "+ Enable APIs and services" and search for and enable the Google Drive API.
