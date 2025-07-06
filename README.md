@@ -5,7 +5,7 @@
 YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose)).
 
 ![YeastLume Pipeline](media/yeastlume-pipeline.png)
-*Starting from multi-channel .tif microscopy movies, the pipeline extracts frame pairs, translates bright-field frames into synthetic fluorescence using a trained BBDM, and segments the resulting images using Cellpose, returning nuclei binary masks.*
+*Starting from multi-channel .tif microscopy movies, the pipeline extracts frame pairs, translates bright-field frames into synthetic fluorescence using a trained BBDM, and segments the resulting images using Cellpose, returning cell binary masks.*
 
 ---
 
@@ -34,7 +34,7 @@ Currently, segmentation is run only on the reconstructed fluorescence images. Ho
 ### 4. **Better End-to-End Support**
 The repository currently requires significant file handling while data preprocessing steps are being finalized.
 
-**→ Future direction:** Provide full E2E support for a single-entry pipeline. Through Python configuration files, published pre-trained weights (e.g., on Hugging Face), or custom orchestration logic, users should be able to input one or more bright-field images and receive the corresponding binary nuclei masks, with the intermediate fluorescence frames optionally returned.
+**→ Future direction:** Provide full E2E support for a single-entry pipeline. Through Python configuration files, published pre-trained weights (e.g., on Hugging Face), or custom orchestration logic, users should be able to input one or more bright-field images and receive the corresponding binary cell masks, with the intermediate fluorescence frames optionally returned.
 
 ---
 
@@ -202,9 +202,9 @@ Lower PSNR and SSIM, along with higher MSE on the unseen set, indicate the model
 
 ---
 
-## 7. Binary Nuclei Mask Generation
+## 7. Binary Cell Mask Generation
 
-From the evaluation output fluorescence frames, utilize [Cellpose](https://github.com/MouseLand/cellpose) to create 512x512 binary nuclei masks to aid downstream segmentation.
+From the evaluation output fluorescence frames, utilize [Cellpose](https://github.com/MouseLand/cellpose) to create 512x512 binary masks to aid downstream segmentation.
 
 1. Configure the Conda environment for the Cellpose model. This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines.
 ```shell
