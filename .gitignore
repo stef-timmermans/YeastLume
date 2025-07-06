@@ -1,8 +1,24 @@
 # Utilized repositories
 BBDM/
+taming-transformers/
+cellpose/
+
+# taming-transformers sensitive input
+fluorescence_train.txt
+fluorescence_val.txt
 
 # Dataset
 data/
+data-unseen/
+
+# Checkpoints
+checkpoints/
+
+# Output
+logs/
+
+# macOS Metadata
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
