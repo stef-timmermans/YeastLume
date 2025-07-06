@@ -148,10 +148,12 @@ mkdir -p data-unseen/val/B
 
 3. Pull the best BBDM checkpoint from remote manually. For example, to clone epoch 100, do: `rclone copy -P gdrive:YeastLume/BBDM/results/YeastLume/LBBDM-f4/checkpoint/top_model_epoch_100.pth checkpoints/BBDM`. The name of the checkpoint can be examined on Google Drive.
 
-4. Run evaluation script. This will write test results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Unseen".
+4. Run evaluation script. This will write image test results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Unseen".
 ```shell
 sbatch scripts/jobs/eval_seen_bbdm_job.sh
 ```
+
+5. Run metrics on the supplied images
 
 # Supplementary Install Information
 

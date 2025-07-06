@@ -2,7 +2,7 @@
 # Leave the script if an error is encountered
 set -e
 
-# Activate the virtual environment created by `initial_setup.sh`
+# Activate the virtual environment created by `preprocessing_setup.sh`
 cd data-loading
 source .venv/bin/activate
 
