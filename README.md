@@ -1,4 +1,4 @@
-# 🦠💡 YeastLume
+# 💡 YeastLume
 
 ### Version 1.0.0
 
@@ -13,7 +13,7 @@ This project demonstrates that BBDM can reconstruct fluorescence-like images fro
 ### 1. **Frame-Wise Splitting Ignores Biological Context**
 Currently, frames from the same `.tif` movie are split into training, validation, and test sets independently. This causes leakage into the validation set and one of the test sets.
 
-**→ Future direction:** Split data by `.tif` file (i.e., by movie), ensuring no overlap between training and test videos. This provides a more biologically meaningful evaluation of generalization to unseen time series. Refactor/trim intra-film job logic to only use the new data split paradigm.
+**→ Future direction:** Split data by `.tif` file (i.e., by movie), ensuring no overlap between training, validation, and test videos. This provides a more biologically meaningful evaluation of generalization to unseen time series. Refactor/trim intra-film job logic to only use the new data split paradigm.
 
 ### 2. **Colormaps Distort Raw Imaging Data**
 Both bright-field and fluorescence channels are converted into RGB images using artificial colormaps. Though this decision was intentional for a proof-of-concept, it may negatively impact downstream segmentation (via Cellpose or other means).  
@@ -27,6 +27,11 @@ Currently, segmentation is run only on the reconstructed fluorescence images. Ho
 - Run Cellpose using [bright-field, predicted fluorescence] and compare segmentation results to [bright-field, ground-truth fluorescence].  
 - Evaluate whether the reconstructed fluorescence actually improves segmentation beyond using bright-field alone.
 - Experiment with new SOTA segmentation strategies on fluorescence frames (using labeled ground-truth).
+
+### 4. **Better End-to-End Support**
+The repository currently requires significant file handling while data preprocessing steps are being finalized.
+
+**→ Future direction:** Provide full E2E support for a single-entry pipeline. Through Python configuration files, published pre-trained weights (e.g., on Hugging Face), or custom orchestration logic, users should be able to input one or more bright-field images and receive the corresponding binary nuclei masks, with the intermediate fluorescence frames optionally returned.
 
 ---
 
@@ -69,7 +74,7 @@ BBDM expects data in a particular format for training, validating, and testing. 
 ---
 
 ## 3. Remote Data Hosting via Rclone
-Hosting the training data can be done via any service; however, this project was developed using Rclone—University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork (or copy)* of the repository:
+Hosting the training data can be done via any service; however, this project was developed using Rclone—the University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly setup Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork (or copy)** of the repository:
 
 1. Create a new Google Cloud Platform project.
 2. Under "APIs and Services" → "Enabled APIs & services", click "+ Enable APIs and services" and search for and enable the Google Drive API.
@@ -111,9 +116,9 @@ rclone copy -P gdrive:YeastLume/data/ data/
 sbatch scripts/jobs/train_vqgan_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
-Train the VQGAN until results are as desired (the model will plateau in performance). Then the checkpoint to remote for safekeeping along with the related training and validation images, if desired. These commands assume only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
+Train the VQGAN until results are as desired (the model will plateau in performance). Then push the checkpoint to remote for safekeeping along with the related training and validation images, if desired. These commands assume only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
 ```shell
 module load rclone/1.66.0
 rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/checkpoints gdrive:YeastLume/VQGAN/checkpoints
@@ -141,8 +146,7 @@ rclone copy gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
 sbatch scripts/jobs/train_bbdm_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, only missing the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
-
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 4. Push the model training output to remote for safekeeping (use a more specific source filepath if you wish to exclude unnecessary data).
 ```shell
@@ -158,7 +162,7 @@ With the BBDM model trained, inference can be run on a selected checkpoint via t
 
 The first is on data from the same `.tif` movies as the training and validation data, albeit from unseen individual frames.
 
-The second test set is from unseen `.tif` movies. This set can be used to evaluate how the model performs in similar, but not exact conditions as the training data.
+The second test set is from unseen `.tif` movies. This set can be used to evaluate how the model performs under similar but not identical conditions as the training data.
 
 1. Pull both sets of remote data (if necessary).
 ```shell
@@ -200,11 +204,13 @@ From the evaluation output fluorescence frames, utilize [Cellpose](https://githu
 ./scripts/cellpose_setup.sh
 ```
 
-2. Segment using Cellpose on the evaluation images.
+2. Segment using Cellpose on the evaluation images. Images will be stored in [`segmentation/masks/`](./segmentation/masks).
 
 ```shell
 sbatch scripts/jobs/cellpose_isolated_job.sh
 ```
+
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/cellpose_debug_isolated_job.sh`. This script is the same as `cellpose_isolated_job.sh`, except it omits the actual Python call to run the model, and with much lighter GPU[-hour] usage.*
 
 ---
 
