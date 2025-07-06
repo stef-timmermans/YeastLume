@@ -51,6 +51,6 @@ python segmentation/segment_isolated_channel.py BBDM/results/YeastLume/LBBDM-f4/
 # Launch segmentation of second test set
 echo ""
 echo "Segmenting data-unseen output..."
-python segmentation/segment_isolated_channel.py data/test/YeastLume-Unseen/LBBDM-f4/sample_to_eval/200 segmentation/masks/unseen
+python segmentation/segment_isolated_channel.py BBDM/results/YeastLume-Unseen/LBBDM-f4/sample_to_eval/200 segmentation/masks/unseen
 
 echo "Segmentation finished at: $(date)"
