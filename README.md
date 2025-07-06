@@ -1,8 +1,8 @@
-# 💡 YeastLume
+# 🦠💡 YeastLume
 
 ### Version 1.0.0
 
-YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose).
+YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose)).
 
 ---
 
