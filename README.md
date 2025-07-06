@@ -153,7 +153,11 @@ mkdir -p data-unseen/val/B
 sbatch scripts/jobs/eval_seen_bbdm_job.sh
 ```
 
-5. Run metrics on the supplied images
+5. Run metrics on the supplied images.
+```shell
+./scripts/metrics_setup.sh
+./scripts/metrics.sh
+```
 
 # Supplementary Install Information
 
