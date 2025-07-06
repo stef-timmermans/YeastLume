@@ -1,8 +1,35 @@
-# YeastLume
+# 💡 YeastLume
 
-YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference and evaluation.
+### Version 1.0.0
 
-# Installation and Use
+YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose).
+
+---
+
+## 🚧 Next Steps / Limitations
+
+This project demonstrates that BBDM can reconstruct fluorescence-like images from bright-field inputs. However, the current pipeline has several important limitations that future work should address:
+
+### 1. **Frame-Wise Splitting Ignores Biological Context**
+Currently, frames from the same `.tif` movie are split into training, validation, and test sets independently. This causes leakage into the validation set and one of the test sets.
+
+**→ Future direction:** Split data by `.tif` file (i.e., by movie), ensuring no overlap between training and test videos. This provides a more biologically meaningful evaluation of generalization to unseen time series. Refactor/trim intra-film job logic to only use the new data split paradigm.
+
+### 2. **Colormaps Distort Raw Imaging Data**
+Both bright-field and fluorescence channels are converted into RGB images using artificial colormaps. Though this decision was intentional for a proof-of-concept, it may negatively impact downstream segmentation (via Cellpose or other means).  
+
+**→ Future direction:** Keep all data in raw grayscale format throughout preprocessing, training, and inference. Adjust model configs accordingly to accept true high-definition grayscale input/output.
+
+### 3. **Segmentation Does Not Leverage Original Bright-Field**
+Currently, segmentation is run only on the reconstructed fluorescence images. However, segmentation models may accept multiple channels from a `.tif` at once.
+
+**→ Future direction:**  
+- Run Cellpose using [bright-field, predicted fluorescence] and compare segmentation results to [bright-field, ground-truth fluorescence].  
+- Evaluate whether the reconstructed fluorescence actually improves segmentation beyond using bright-field alone.
+
+---
+
+# ⚙️ Installation and Use
 Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data. Steps 1 and 2 assume a local, unix-based environment (e.g., macOS), and the remaining steps assume use on a high-performance cluster (e.g., Hábrók).
 
 ### Local Requirements
@@ -178,7 +205,9 @@ From the evaluation output fluorescence frames, utilize [Cellpose](https://githu
 sbatch scripts/jobs/cellpose_isolated_job.sh
 ```
 
-# Supplementary Install Information
+---
+
+# 🖥 Supplementary Install Information
 
 ---
 
