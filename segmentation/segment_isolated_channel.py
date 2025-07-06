@@ -6,7 +6,7 @@ import numpy as np
 
 def segment_folder(input_folder, output_folder):
     # Load Cellpose with the nuclei model
-    model = models.Cellpose(gpu=True, model_type='nuclei')
+    model = models.CellposeModel(gpu=True, model_type='nuclei')
 
     # Collect all .png files in the directory
     image_files = sorted([f for f in os.listdir(input_folder) if f.lower().endswith(".png")])
