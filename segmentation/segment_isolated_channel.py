@@ -5,8 +5,8 @@ from PIL import Image
 import numpy as np
 
 def segment_folder(input_folder, output_folder):
-    # Load Cellpose with the nuclei model
-    model = models.CellposeModel(gpu=True, model_type='nuclei')
+    # Load Cellpose with the general model (v4+)
+    model = models.CellposeModel(gpu=True)
 
     # Collect all .png files in the directory
     image_files = sorted([f for f in os.listdir(input_folder) if f.lower().endswith(".png")])
@@ -25,10 +25,9 @@ def segment_folder(input_folder, output_folder):
         img = np.array(Image.open(img_path).convert("RGB"))
 
         # Run Cellpose segmentation
-        masks, _, _, _ = model.eval(
+        masks, _, _ = model.eval(
             img,
             diameter=None,
-            channels=[0, 0],  # Use grayscale
             flow_threshold=None,
             do_3D=False
         )

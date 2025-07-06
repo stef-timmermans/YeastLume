@@ -26,6 +26,7 @@ Currently, segmentation is run only on the reconstructed fluorescence images. Ho
 **→ Future direction:**  
 - Run Cellpose using [bright-field, predicted fluorescence] and compare segmentation results to [bright-field, ground-truth fluorescence].  
 - Evaluate whether the reconstructed fluorescence actually improves segmentation beyond using bright-field alone.
+- Experiment with new SOTA segmentation strategies on fluorescence frames (using labeled ground-truth).
 
 ---
 
