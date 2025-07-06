@@ -10,6 +10,7 @@ def evaluate(dir_path):
 
     psnr_scores = []
     ssim_scores = []
+    mse_scores = []
 
     for fname in sorted(os.listdir(gen_dir)):
         gen_img = np.array(Image.open(os.path.join(gen_dir, fname)).convert("RGB"))
@@ -17,9 +18,11 @@ def evaluate(dir_path):
 
         psnr_scores.append(psnr(gt_img, gen_img, data_range=255))
         ssim_scores.append(ssim(gt_img, gen_img, channel_axis=-1, data_range=255))
+        mse_scores.append(np.mean((gt_img.astype(np.float32) - gen_img.astype(np.float32)) ** 2))
 
     print(f"PSNR: {np.mean(psnr_scores):.2f}")
     print(f"SSIM: {np.mean(ssim_scores):.4f}")
+    print(f"MSE: {np.mean(mse_scores):.2f}")
 
 print("Seen set:")
 evaluate("../BBDM/results/YeastLume/LBBDM-f4/sample_to_eval")
