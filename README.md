@@ -172,6 +172,13 @@ From the evaluation output fluorescence frames, utilize [Cellpose](https://githu
 ./scripts/cellpose_setup.sh
 ```
 
+2. Segment using Cellpose on the evaluation images.
+
+```shell
+python segmentation/segment_isolated_channel.py BBDM/results/YeastLume/LBBDM-f4/sample_to_eval/200 segmentation/masks/seen
+python segmentation/segment_isolated_channel.py data/test/YeastLume-Unseen/LBBDM-f4/sample_to_eval/200 segmentation/masks/unseen
+```
+
 # Supplementary Install Information
 
 ---
