@@ -1,6 +1,7 @@
 # Utilized repositories
 BBDM/
 taming-transformers/
+cellpose/
 
 # taming-transformers sensitive input
 fluorescence_train.txt
