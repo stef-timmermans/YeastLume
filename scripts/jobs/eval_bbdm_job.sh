@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=bbdm-yeast-train
 #SBATCH --gpus-per-node=a100:1
-#SBATCH --partition=gpushort
+#SBATCH --partition=gpumedium
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
