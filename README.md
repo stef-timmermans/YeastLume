@@ -41,6 +41,9 @@ The repository currently requires significant file handling while data preproces
 # ⚙️ Installation and Use
 Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data. Steps 1 and 2 assume a local, unix-based environment (e.g., macOS), and the remaining steps assume use on a high-performance cluster (e.g., Hábrók).
 
+### Dataset
+- The microscopy datasets used in this project are not publicly distributed, but the pipeline will work with similar .tif input files as long as the installation and preprocessing steps are followed.
+
 ### Local Requirements
 - 512x512 three-channel .tif films
 - Python 3.11+ (with pip)
@@ -52,7 +55,7 @@ Below are instructions on how to train a BBDM model with paired bright-field and
 - Conda (via Anaconda3/2024.02-1)
 - Rclone *(if pushing/pulling data)*
 
-⚠️ **NOTE:** SLURM job scripts assume YeastLume is in the `$HOME` directory
+⚠️ **NOTE:** SLURM job scripts assume YeastLume is in the `$HOME` directory!
 
 ---
 
