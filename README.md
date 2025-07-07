@@ -52,6 +52,8 @@ Below are instructions on how to train a BBDM model with paired bright-field and
 - Conda (via Anaconda3/2024.02-1)
 - Rclone *(if pushing/pulling data)*
 
+⚠️ **NOTE:** SLURM job scripts assume YeastLume is in the `$HOME` directory
+
 ---
 
 ![Training Process](media/yeastlume-training.png)
