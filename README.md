@@ -14,7 +14,7 @@ YeastLume is a budding yeast microscopy image processing pipeline that uses diff
 This project demonstrates that BBDM can reconstruct fluorescence-like images from bright-field inputs. However, the current pipeline has several important limitations that future work should address:
 
 ### 1. **Frame-Wise Splitting Ignores Biological Context**
-Currently, frames from the same `.tif` movie are split into training, validation, and test sets independently. This causes leakage into the validation set and one of the test sets.
+Currently, frames from the same `.tif` movie are split into training, validation, and test sets independently. This introduces bias due to low variance in the validation set and one of the test sets.
 
 **→ Future direction:** Split data by `.tif` file (i.e., by movie), ensuring no overlap between training, validation, and test videos. This provides a more biologically meaningful evaluation of generalization to unseen time series. Refactor/trim intra-film job logic to only use the new data split paradigm.
 
