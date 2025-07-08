@@ -13,7 +13,7 @@ echo "✅ Set DATA_DIR to $DATA_DIR"
 VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
 echo "✅ Set VQGAN_DIR to $VQGAN_DIR"
 
-# Overwrite the BBDM template file data path
+# Overwrite the BBDM template file data and checkpoint paths
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
 echo "✅ Updated dataset_path in BBDM yaml"
 
