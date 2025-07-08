@@ -45,7 +45,6 @@ echo "Python version: $(python --version)"
 echo ""
 
 # Launch segmentation of test set on single channel (synthetic fluorescence)
-echo "Segmenting data output..."
 python segmentation/segment_isolated_channel.py BBDM/results/YeastLume/LBBDM-f4/sample_to_eval/200 segmentation/masks
 
 echo "Segmentation finished at: $(date)"

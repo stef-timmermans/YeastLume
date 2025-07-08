@@ -52,4 +52,4 @@ python3 main.py \
   --save_top \
   --gpu_ids 0,1
 
-echo "Training finished at: $(date)"
+echo "BBDM training finished at: $(date)"

@@ -50,4 +50,4 @@ python main.py \
   -t True \
   --gpus 0,
 
-echo "Training finished at: $(date)"
+echo "VQGAN training finished at: $(date)"
