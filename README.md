@@ -75,7 +75,7 @@ Run the data loading setup script for YeastLume's data preparation.
 ## 2. Data Preparation and Preprocessing
 BBDM expects data in a particular format for training, validating, and testing. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
 
-1. Populate the [`data-loading/raw-data`](data-loading/raw-data) and [`data-loading/unseen-raw-data`](data-loading/unseen-raw-data) directories with your (unique) multi-channel `.tif` files of `512x512` films. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+1. Populate the [`data-loading/raw-data`](data-loading/raw-data)  directory with your multi-channel `.tif` files of `512x512` films. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
 2. Run the preprocessing script to automatically create the respective data folders.
 ```shell
 ./scripts/preprocessing.sh
@@ -100,7 +100,6 @@ Hosting the training data can be done via any service; however, this project was
 10. Push the model input data to remote (if training the model on a different machine).
 ```shell
 rclone copy -P data/ gdrive:YeastLume/data/
-rclone copy -P data-unseen/ gdrive:YeastLume/data-unseen/
 ```
 
 *Optional steps if involving multiple researchers/developers are included at the bottom of this document under [Remote Data Hosting via Rclone (cont.)](#remote-data-hosting-via-rclone-cont)*.
@@ -168,36 +167,14 @@ rclone copy -P BBDM/results/YeastLume/LBBDM-f4/checkpoint/ gdrive:YeastLume/BBDM
 
 ## 6. Running Inference on the BBDM Model
 
-With the BBDM model trained, inference can be run on a selected checkpoint via two different test sets for evaluation.
+1. Pull the best BBDM checkpoint from remote manually. For example, to clone epoch 100, do: `rclone copy -P gdrive:YeastLume/BBDM/results/YeastLume/LBBDM-f4/checkpoint/top_model_epoch_100.pth checkpoints/BBDM`. The name of the checkpoint can be examined on Google Drive.
 
-The first is on data from the same `.tif` movies as the training and validation data, albeit from unseen individual frames.
-
-The second test set is from unseen `.tif` movies. This set can be used to evaluate how the model performs under similar but not identical conditions as the training data.
-
-1. Pull both sets of remote data (if necessary).
-```shell
-module load rclone/1.66.0
-rclone copy -P gdrive:YeastLume/data/ data/
-rclone copy -P gdrive:YeastLume/data-unseen/ data-unseen/
-```
-
-2. Ensure that necessary (empty) folders exist for the unseen movies test. This is necessary because BBDM checks for a valid data directory layout regardless of whether some folders are not read.
-```shell
-mkdir -p data-unseen/train/A
-mkdir -p data-unseen/train/B
-mkdir -p data-unseen/val/A
-mkdir -p data-unseen/val/B
-```
-
-3. Pull the best BBDM checkpoint from remote manually. For example, to clone epoch 100, do: `rclone copy -P gdrive:YeastLume/BBDM/results/YeastLume/LBBDM-f4/checkpoint/top_model_epoch_100.pth checkpoints/BBDM`. The name of the checkpoint can be examined on Google Drive.
-
-4. Run the evaluation script. This will write image test results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Unseen".
+2. Run the evaluation script. This will write image comparison test results to [`BBDM/results/YeastLume/LBBDM-f4/sample_to_eval/`](./BBDM/results/YeastLume/LBBDM-f4/sample_to_eval/).
 ```shell
 sbatch scripts/jobs/eval_bbdm_job.sh
 ```
 
-5. Run metrics on the supplied images. PSNR and SSIM measure reconstruction fidelity and structural similarity between predicted and ground-truth fluorescence images, while MSE captures pixel-wise error.
-Lower PSNR and SSIM, along with higher MSE on the unseen set, indicate the model has overfit to the training data.
+3. Run metrics on the supplied images. PSNR and SSIM measure reconstruction fidelity and structural similarity between predicted and ground-truth fluorescence images, while MSE captures pixel-wise error.
 ```shell
 ./scripts/metrics_setup.sh
 ./scripts/metrics.sh
