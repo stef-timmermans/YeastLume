@@ -5,7 +5,7 @@
 YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose)).
 
 ![YeastLume Pipeline](media/yeastlume-pipeline.png)
-*Starting from multi-channel .tif microscopy movies, the pipeline extracts frame pairs, translates bright-field frames into synthetic fluorescence using a trained BBDM, and segments the resulting images using Cellpose, returning cell binary masks.*
+*Starting from multi-channel .tif microscopy movies, the pipeline extracts frame pairs, translates bright-field frames into synthetic fluorescence using a trained BBDM, and segments the resulting images using Cellpose, returning binary cell masks.*
 
 ---
 
@@ -130,22 +130,20 @@ sbatch scripts/jobs/train_vqgan_job.sh
 
 *In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
-Train the VQGAN until results are as desired (the model will plateau in performance). Then push the checkpoint to remote for safekeeping along with the related training and validation images, if desired. These commands assume only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
+Train the VQGAN until results are as desired (the model will eventually plateau in performance). Then push the created checkpoints to remote for safekeeping. This command assumes only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
 ```shell
 module load rclone/1.66.0
 rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/checkpoints gdrive:YeastLume/VQGAN/checkpoints
-rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/images gdrive:YeastLume/VQGAN/images
 ```
 ---
 
 ## 5. Training the BBDM Model
 With a checkpoint to a VQGAN, train the BBDM model with the following steps:
 
-1. Pull the model input data and the VQGAN checkpoint from remote (if necessary). Please note that the BBDM model expects the VQGAN `last.ckpt` checkpoint file under [`checkpoints/VQGAN/`](checkpoints/VQGAN/). If this file is not present, the model will fail to begin training.
+1. Pull the VQGAN checkpoint from remote (or move the file to [`checkpoints/VQGAN`](./checkpoints/VQGAN) manually). Please note that the BBDM model expects the VQGAN `last.ckpt` checkpoint file under [`checkpoints/VQGAN/`](checkpoints/VQGAN/). If this file is not present, the BBDM model will fail to begin training.
 ```shell
 module load rclone/1.66.0
-rclone copy -P gdrive:YeastLume/data/ data/
-rclone copy gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
+rclone copy -P gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
 ```
 
 2. Configure the Conda environment for the BBDM model. This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any changes to `environment.yml` beforehand.
@@ -160,10 +158,10 @@ sbatch scripts/jobs/train_bbdm_job.sh
 
 *In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
-4. Push the model training output to remote for safekeeping (use a more specific source filepath if you wish to exclude unnecessary data).
+4. Push the model checkpoints to remote for safekeeping.
 ```shell
 module load rclone/1.66.0
-rclone copy -P BBDM/results/ gdrive:YeastLume/BBDM/results
+rclone copy -P BBDM/results/YeastLume/LBBDM-f4/checkpoint/ gdrive:YeastLume/BBDM/checkpoints
 ```
 
 ---
@@ -183,7 +181,7 @@ rclone copy -P gdrive:YeastLume/data/ data/
 rclone copy -P gdrive:YeastLume/data-unseen/ data-unseen/
 ```
 
-2. Ensure that necessary (empty) folders exist for the unseen movies test.
+2. Ensure that necessary (empty) folders exist for the unseen movies test. This is necessary because BBDM checks for a valid data directory layout regardless of whether some folders are not read.
 ```shell
 mkdir -p data-unseen/train/A
 mkdir -p data-unseen/train/B
@@ -193,9 +191,9 @@ mkdir -p data-unseen/val/B
 
 3. Pull the best BBDM checkpoint from remote manually. For example, to clone epoch 100, do: `rclone copy -P gdrive:YeastLume/BBDM/results/YeastLume/LBBDM-f4/checkpoint/top_model_epoch_100.pth checkpoints/BBDM`. The name of the checkpoint can be examined on Google Drive.
 
-4. Run evaluation script. This will write image test results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Unseen".
+4. Run the evaluation script. This will write image test results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Unseen".
 ```shell
-sbatch scripts/jobs/eval_seen_bbdm_job.sh
+sbatch scripts/jobs/eval_bbdm_job.sh
 ```
 
 5. Run metrics on the supplied images. PSNR and SSIM measure reconstruction fidelity and structural similarity between predicted and ground-truth fluorescence images, while MSE captures pixel-wise error.
