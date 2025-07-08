@@ -30,7 +30,7 @@ cp custom_vqgan.yaml taming-transformers/configs/
 git checkout -- custom_vqgan.yaml
 
 cd taming-transformers
-echo "✅ Moved custom_vqgan.yaml; reverted repo root git changes; changed into taming-transformers directory"
+echo "✅ Copied custom_vqgan.yaml; reverted repo root git changes; changed into taming-transformers directory"
 
 # Remote tracking from sub-repository
 rm -rf .git

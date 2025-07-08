@@ -28,7 +28,7 @@ OR OTHER DEALINGS IN THE SOFTWARE./
 
 ---
 
-The [`environment.yml`](environment.yml) and `Template-LBBDM-f4.yaml` files in this directory are derived from the [BBDM](https://github.com/xuekt98/BBDM) repository (under the MIT License). The software is utilized by YeastLume.
+The [`bbdm_environment.yml`](bbdm_environment.yml) and `Template-LBBDM-f4.yaml` files in this directory are derived from the [BBDM](https://github.com/xuekt98/BBDM) repository (under the MIT License). The software is utilized by YeastLume.
 
 ### Source MIT License:
 

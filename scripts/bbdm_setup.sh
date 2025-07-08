@@ -30,14 +30,14 @@ else
 fi
 
 # Overwrite the BBDM environment files and model instruction templates
-cp environment.yml BBDM/
+cp bbdm_environment.yml BBDM/environment.yml
 cp Template-LBBDM-f4.yaml BBDM/configs/
 
 # Revert root template to prevent committing user paths
 git checkout -- Template-LBBDM-f4.yaml
 
 cd BBDM
-echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml; reverted repo root git changes; changed into BBDM directory"
+echo "✅ Copied bbdm_environment.yml (as environment.yml), Template-LBBDM-f4.yaml; reverted repo root git changes; changed into BBDM directory"
 
 # Remote tracking from sub-repository
 rm -rf .git
