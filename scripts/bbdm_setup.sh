@@ -4,27 +4,21 @@ set -e
 
 echo "✅ Starting BBDM setup..."
 
-# Set the data working directories
+# Set the data working directory
 DATA_DIR="$(pwd)/data"
 export DATA_DIR
 echo "✅ Set DATA_DIR to $DATA_DIR"
-
-UNSEEN_DATA_DIR="$(pwd)/data-unseen"
-export UNSEEN_DATA_DIR
-echo "✅ UNSEEN_DATA_DIR to $UNSEEN_DATA_DIR"
 
 # Set the VQGAN checkpoint working directory
 VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
 echo "✅ Set VQGAN_DIR to $VQGAN_DIR"
 
-# Overwrite the BBDM template files' data paths
+# Overwrite the BBDM template file data path
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
-sed -i "19s|dataset_path: '.*'|dataset_path: '${UNSEEN_DATA_DIR}'|" Template-LBBDM-f4-unseen.yaml
-echo "✅ Updated dataset_path in BBDM yamls"
+echo "✅ Updated dataset_path in BBDM yaml"
 
 sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4.yaml
-sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4-unseen.yaml
-echo "✅ Updated ckpt_path in BBDM yamls"
+echo "✅ Updated ckpt_path in BBDM yaml"
 
 # Clone the diffusion model if it doesn't already exist
 # https://github.com/xuekt98/BBDM
@@ -39,15 +33,11 @@ fi
 cp environment.yml BBDM/
 cp Template-LBBDM-f4.yaml BBDM/configs/
 
-# Write the unseen test yaml as well
-cp Template-LBBDM-f4-unseen.yaml BBDM/configs/
-
 # Revert root template to prevent committing user paths
 git checkout -- Template-LBBDM-f4.yaml
-git checkout -- Template-LBBDM-f4-unseen.yaml
 
 cd BBDM
-echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml, Template-LBBDM-f4-unseen.yaml; reverted repo root git changes; changed into BBDM directory"
+echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml; reverted repo root git changes; changed into BBDM directory"
 
 # Remote tracking from sub-repository
 rm -rf .git

@@ -62,18 +62,4 @@ python3 main.py \
   --gpu_ids 0 \
   --resume_model "$TOP_MODEL_PATH"
 
-echo "Evaluation on same-file frames finished at: $(date)"
-echo ""
-
-echo "Sleeping for 10 seconds to prevent model errors..."
-echo ""
-sleep 10
-
-# Launch inter .tif file evaluation
-python3 main.py \
-  --config configs/Template-LBBDM-f4-unseen.yaml \
-  --sample_to_eval \
-  --gpu_ids 0 \
-  --resume_model "$TOP_MODEL_PATH"
-
-echo "Evaluation on unseen-file frames finished at: $(date)"
+echo "BBDM evaluation finished at: $(date)"
