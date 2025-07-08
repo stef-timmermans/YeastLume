@@ -128,7 +128,7 @@ rclone copy -P gdrive:YeastLume/data/ data/
 sbatch scripts/jobs/train_vqgan_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/debug/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 Train the VQGAN until results are as desired (the model will eventually plateau in performance). Then push the created checkpoints to remote for safekeeping. This command assumes only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
 ```shell
@@ -156,7 +156,7 @@ rclone copy -P gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
 sbatch scripts/jobs/train_bbdm_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/debug/train_debug_bbdm_job.sh`. This script is the same as `train_bbdm_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
 4. Push the model checkpoints to remote for safekeeping.
 ```shell
@@ -220,7 +220,7 @@ From the evaluation output fluorescence frames, utilize [Cellpose](https://githu
 sbatch scripts/jobs/cellpose_isolated_job.sh
 ```
 
-*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/cellpose_debug_isolated_job.sh`. This script is the same as `cellpose_isolated_job.sh`, except it omits the actual Python call to run the model, and with much lighter GPU[-hour] usage.*
+*In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/debug/cellpose_debug_isolated_job.sh`. This script is the same as `cellpose_isolated_job.sh`, except it omits the actual Python call to run the model, and with much lighter GPU[-hour] usage.*
 
 ---
 
