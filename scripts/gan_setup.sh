@@ -5,13 +5,13 @@ set -e
 echo "✅ Starting taming-transformers setup..."
 
 # Create the .txt data info files
-find "$(pwd)/data/train/B" -name "*.png" > fluorescence_train.txt
-find "$(pwd)/data/val/B" -name "*.png" > fluorescence_val.txt
+find "$(pwd)/data/train/B" -name "*.png" > fluorescence_rgb_train.txt
+find "$(pwd)/data/val/B" -name "*.png" > fluorescence_rgb_val.txt
 echo "✅ Wrote image list files"
 
 # Overwrite the taming-transformers template file .txt file paths
-sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_train.txt|" configs/models/rgb/custom_vqgan.yaml
-sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_val.txt|" configs/models/rgb/custom_vqgan.yaml
+sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_rgb_train.txt|" configs/models/rgb/custom_vqgan.yaml
+sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_rgb_val.txt|" configs/models/rgb/custom_vqgan.yaml
 echo "✅ Updated image list file paths in custom_vqgan intermediate yaml file"
 
 # Clone the VQGAN model if it doesn't already exist
