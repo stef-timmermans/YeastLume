@@ -14,10 +14,10 @@ VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
 echo "✅ Set VQGAN_DIR to $VQGAN_DIR"
 
 # Overwrite the BBDM template file data and checkpoint paths
-sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
+sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" configs/models/rgb/Template-LBBDM-f4.yaml
 echo "✅ Updated dataset_path in BBDM yaml"
 
-sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4.yaml
+sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" configs/models/rgb/Template-LBBDM-f4.yaml
 echo "✅ Updated ckpt_path in BBDM yaml"
 
 # Clone the diffusion model if it doesn't already exist
@@ -31,10 +31,10 @@ fi
 
 # Overwrite the BBDM environment files and model instruction templates
 cp bbdm_environment.yml BBDM/environment.yml
-cp Template-LBBDM-f4.yaml BBDM/configs/
+cp configs/models/rgb/Template-LBBDM-f4.yaml BBDM/configs/
 
 # Revert root template to prevent committing user paths
-git checkout -- Template-LBBDM-f4.yaml
+git checkout -- configs/models/rgb/Template-LBBDM-f4.yaml
 
 cd BBDM
 echo "✅ Copied bbdm_environment.yml (as environment.yml), Template-LBBDM-f4.yaml; reverted repo root git changes; changed into BBDM directory"

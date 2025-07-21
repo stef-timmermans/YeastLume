@@ -10,8 +10,8 @@ find "$(pwd)/data/val/B" -name "*.png" > fluorescence_val.txt
 echo "✅ Wrote image list files"
 
 # Overwrite the taming-transformers template file .txt file paths
-sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_train.txt|" custom_vqgan.yaml
-sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_val.txt|" custom_vqgan.yaml
+sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_train.txt|" configs/models/rgb/custom_vqgan.yaml
+sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_val.txt|" configs/models/rgb/custom_vqgan.yaml
 echo "✅ Updated image list file paths in custom_vqgan intermediate yaml file"
 
 # Clone the VQGAN model if it doesn't already exist
@@ -24,10 +24,10 @@ else
 fi
 
 # Overwrite the taming-transformers model instruction template
-cp custom_vqgan.yaml taming-transformers/configs/
+cp configs/models/rgb/custom_vqgan.yaml taming-transformers/configs/
 
 # Revert root template to prevent committing user paths
-git checkout -- custom_vqgan.yaml
+git checkout -- configs/models/rgb/custom_vqgan.yaml
 
 cd taming-transformers
 echo "✅ Copied custom_vqgan.yaml; reverted repo root git changes; changed into taming-transformers directory"
