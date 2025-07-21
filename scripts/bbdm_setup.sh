@@ -29,19 +29,19 @@ else
     echo "✅ Cloned BBDM repository"
 fi
 
-# Overwrite the BBDM environment files and model instruction templates
-cp bbdm_environment.yml BBDM/environment.yml
+# Overwrite the model instruction template
 cp configs/models/rgb/Template-LBBDM-f4.yaml BBDM/configs/
 
 # Revert root template to prevent committing user paths
 git checkout -- configs/models/rgb/Template-LBBDM-f4.yaml
 
 cd BBDM
-echo "✅ Copied bbdm_environment.yml (as environment.yml), Template-LBBDM-f4.yaml; reverted repo root git changes; changed into BBDM directory"
+echo "✅ Copied Template-LBBDM-f4.yaml; reverted repo root git changes; changed into BBDM directory"
 
 # Remote tracking from sub-repository
 rm -rf .git
-echo "✅ Removed tracking from BBDM"
+cd ..
+echo "✅ Removed tracking from BBDM; switched back to project root"
 
 # Install Conda
 module purge
@@ -55,7 +55,7 @@ conda env remove -n BBDM -y
 conda create -n BBDM python=3.9.16 -y
 echo "✅ Created BBDM Conda environment with Python 3.9.16"
 conda activate BBDM
-conda env update --file environment.yml --prune
-echo "✅ Updated BBDM environment using environment.yml"
+conda env update --file configs/conda/bbdm_environment.yml --prune
+echo "✅ Updated BBDM environment using bbdm_environment.yml"
 
 echo "✅ BBDM setup complete!"
