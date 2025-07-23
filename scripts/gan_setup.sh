@@ -26,8 +26,8 @@ export DATA_DIR
 echo "✅ Set DATA_DIR to $DATA_DIR"
 
 # Create the .txt data info files
-find "${DATA_DIR}/train/B" -name "*.png" > fluorescence_rgb_train.txt
-find "${DATA_DIR}/val/B" -name "*.png" > fluorescence_rgb_val.txt
+find "${DATA_DIR}/train/B" -name "*.png" > fluorescence_train.txt
+find "${DATA_DIR}/val/B" -name "*.png" > fluorescence_val.txt
 echo "✅ Wrote image list files"
 
 # Clone the VQGAN model if it doesn't already exist
@@ -57,10 +57,10 @@ else
     exit 1
 fi
 
-sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_rgb_train.txt|" taming-transformers/configs/custom_vqgan.yaml
+sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_train.txt|" taming-transformers/configs/custom_vqgan.yaml
 echo "✅ Updated training_images_list_file in custom_vqgan.yaml"
 
-sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_rgb_val.txt|" taming-transformers/configs/custom_vqgan.yaml
+sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_val.txt|" taming-transformers/configs/custom_vqgan.yaml
 echo "✅ Updated test_images_list_file in custom_vqgan.yaml"
 
 # Remote tracking from sub-repository
