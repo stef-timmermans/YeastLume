@@ -50,12 +50,7 @@ elif [ "$COLOR_MODE" = "rgb" ]; then
 
     # Overwrite the BBDM template file data and checkpoint paths
     cp configs/models/rgb/Template-LBBDM-f4.yaml BBDM/configs/Template-LBBDM-f4.yaml
-
-    sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" BBDM/configs/Template-LBBDM-f4.yaml
-    echo "✅ Updated dataset_path in BBDM yaml"
-
-    sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" BBDM/configs/Template-LBBDM-f4.yaml
-    echo "✅ Updated ckpt_path in BBDM yaml"
+    echo "✅ Copied rgb BBDM yaml"
 
 # Catch error
 else
@@ -63,6 +58,11 @@ else
     exit 1
 fi
 
+sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" BBDM/configs/Template-LBBDM-f4.yaml
+echo "✅ Updated dataset_path in BBDM yaml"
+
+sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" BBDM/configs/Template-LBBDM-f4.yaml
+echo "✅ Updated ckpt_path in BBDM yaml"
 
 cd BBDM
 echo "✅ Copied Template-LBBDM-f4.yaml; applied user-specific file paths; changed into BBDM directory"
@@ -70,7 +70,7 @@ echo "✅ Copied Template-LBBDM-f4.yaml; applied user-specific file paths; chang
 # Remote tracking from sub-repository
 rm -rf .git
 cd ..
-echo "✅ Removed tracking from BBDM; switched back to project root"
+echo "✅ Removed tracking from BBDM"
 
 # Install Conda
 module purge

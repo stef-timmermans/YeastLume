@@ -47,16 +47,9 @@ if [ "$COLOR_MODE" = "grayscale" ]; then
 
 # Set up for rgb
 elif [ "$COLOR_MODE" = "rgb" ]; then
-    echo "Setting up for rgb"
-
-    # Overwrite the taming-transformers template file .txt file paths
+    # Overwrite the taming-transformers rgb template file .txt file paths
     cp configs/models/rgb/custom_vqgan.yaml taming-transformers/configs/custom_vqgan.yaml
-
-    sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_rgb_train.txt|" taming-transformers/configs/custom_vqgan.yaml
-    echo "✅ Updated training_images_list_file in custom_vqgan.yaml"
-
-    sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_rgb_val.txt|" taming-transformers/configs/custom_vqgan.yaml
-    echo "✅ Updated test_images_list_file in custom_vqgan.yaml"
+    echo "✅ Copied rgb VQGAN yaml"
 
 # Catch error
 else
@@ -64,12 +57,16 @@ else
     exit 1
 fi
 
-cd taming-transformers
-echo "✅ Copied custom_vqgan.yaml; applied user-specific file paths; changed into taming-transformers directory"
+sed -i "s|training_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|training_images_list_file: $(pwd)/fluorescence_rgb_train.txt|" taming-transformers/configs/custom_vqgan.yaml
+echo "✅ Updated training_images_list_file in custom_vqgan.yaml"
+
+sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_rgb_val.txt|" taming-transformers/configs/custom_vqgan.yaml
+echo "✅ Updated test_images_list_file in custom_vqgan.yaml"
 
 # Remote tracking from sub-repository
+cd taming-transformers
 rm -rf .git
-echo "✅ Removed tracking from taming-transformers"
+echo "✅ Removed tracking from taming-transformers; now in taming-transformers directory"
 
 # Install Conda
 module purge
