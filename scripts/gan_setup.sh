@@ -43,6 +43,11 @@ fi
 # Set up for grayscale
 if [ "$COLOR_MODE" = "grayscale" ]; then
     echo "Setting up for grayscale..."
+    # TODO
+
+# Set up for rgb
+elif [ "$COLOR_MODE" = "rgb" ]; then
+    echo "Setting up for rgb"
 
     # Overwrite the taming-transformers template file .txt file paths
     cp configs/models/rgb/custom_vqgan.yaml taming-transformers/configs/custom_vqgan.yaml
@@ -52,11 +57,6 @@ if [ "$COLOR_MODE" = "grayscale" ]; then
 
     sed -i "s|test_images_list_file: OVERWRITTEN_BY_GAN_SETUP_SH|test_images_list_file: $(pwd)/fluorescence_rgb_val.txt|" taming-transformers/configs/custom_vqgan.yaml
     echo "✅ Updated test_images_list_file in custom_vqgan.yaml"
-
-# Set up for rgb
-elif [ "$COLOR_MODE" = "rgb" ]; then
-    echo "Setting up for rgb"
-    # TODO
 
 # Catch error
 else

@@ -42,6 +42,11 @@ fi
 # Set up for grayscale
 if [ "$COLOR_MODE" = "grayscale" ]; then
     echo "Setting up for grayscale..."
+    # TODO
+
+# Set up for rgb
+elif [ "$COLOR_MODE" = "rgb" ]; then
+    echo "Setting up for rgb"
 
     # Overwrite the BBDM template file data and checkpoint paths
     cp configs/models/rgb/Template-LBBDM-f4.yaml BBDM/configs/Template-LBBDM-f4.yaml
@@ -51,11 +56,6 @@ if [ "$COLOR_MODE" = "grayscale" ]; then
 
     sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" BBDM/configs/Template-LBBDM-f4.yaml
     echo "✅ Updated ckpt_path in BBDM yaml"
-
-# Set up for rgb
-elif [ "$COLOR_MODE" = "rgb" ]; then
-    echo "Setting up for rgb"
-    # TODO
 
 # Catch error
 else
