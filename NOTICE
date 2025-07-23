@@ -1,10 +1,15 @@
 # NOTICE
 
-The [`custom_vqgan.yaml`](custom_vqgan.yaml) file in this directory is derived from the [taming-transformers repository](https://github.com/CompVis/taming-transformers/tree/master) (under the MIT License). The software is utilized by YeastLume.
+This project utilizes open-source software.
 
-### Source MIT License:
+The `configs` directory contains yaml configuration files derived and/or copied from Taming Transformers under the MIT
+License (https://github.com/CompVis/taming-transformers), BBDM under the MIT License (https://github.com/xuekt98/BBDM),
+and Cellpose under the BSD-3-Clause License (https://github.com/MouseLand/cellpose).
 
-```text
+###
+### Taming Transformers MIT License:
+###
+```
 Copyright (c) 2020 Patrick Esser and Robin Rombach and Björn Ommer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,13 +31,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OR OTHER DEALINGS IN THE SOFTWARE./
 ```
 
----
 
-The [`bbdm_environment.yml`](bbdm_environment.yml) and `Template-LBBDM-f4.yaml` files in this directory are derived from the [BBDM](https://github.com/xuekt98/BBDM) repository (under the MIT License). The software is utilized by YeastLume.
+###
+### BBDM MIT License:
+###
 
-### Source MIT License:
-
-```text
+```
 MIT License
 
 Copyright (c) 2023 xuekt98
@@ -56,13 +60,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
----
-
-The [cellpose](https://github.com/MouseLand/cellpose) repository (under the BSD-3-Clause License) software is utilized by YeastLume.
-
-### Source BSD-3-Clause License:
-
-```text
+###
+### Cellpose BSD-3-Clause License:
+###
+```
 Copyright © 2020 Howard Hughes Medical Institute
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
