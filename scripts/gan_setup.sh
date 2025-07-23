@@ -69,8 +69,7 @@ echo "✅ Copied custom_vqgan.yaml; applied user-specific file paths; changed in
 
 # Remote tracking from sub-repository
 rm -rf .git
-cd ..
-echo "✅ Removed tracking from taming-transformers; switched back to project root"
+echo "✅ Removed tracking from taming-transformers"
 
 # Install Conda
 module purge
