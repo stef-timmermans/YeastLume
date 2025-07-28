@@ -1,4 +1,12 @@
-# Ignore the data inputs and outputs
+# Ignore raw data
+raw-data/train
+!raw-data/train/.gitkeep
+raw-data/val
+!raw-data/val/.gitkeep
+raw-data/test
+!raw-data/test/.gitkeep
+
+# Ignore debugging data logic and notes
 example-data/*
 !example-data/README.md
 formatted-frame-pairs/*
