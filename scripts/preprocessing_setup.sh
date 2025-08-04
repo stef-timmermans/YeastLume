@@ -2,6 +2,9 @@
 # Leave the script if an error is encountered
 set -e
 
+# Copy the .env file template to the editable version (not tracked)
+cp .env.example .env
+
 # Move into the data-loading directory
 cd data-loading
 

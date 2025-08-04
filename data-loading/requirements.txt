@@ -2,5 +2,6 @@ dotenv
 tifffile~=2024.8.30
 matplotlib~=3.9.4
 jupyter
+numpy
 dvc[gdrive]
 nbstripout
