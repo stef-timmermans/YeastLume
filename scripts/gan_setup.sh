@@ -26,8 +26,8 @@ export DATA_DIR
 echo "✅ Set DATA_DIR to $DATA_DIR"
 
 # Create the .txt data info files
-find "${DATA_DIR}/train/B" -name "*.png" > fluorescence_train.txt
-find "${DATA_DIR}/val/B" -name "*.png" > fluorescence_val.txt
+find "${DATA_DIR}/train/B" \( -name "*.png" -o -name "*.tif" \) > fluorescence_train.txt
+find "${DATA_DIR}/val/B" \( -name "*.png" -o -name "*.tif" \) > fluorescence_val.txt
 echo "✅ Wrote image list files"
 
 # Clone the VQGAN model if it doesn't already exist
