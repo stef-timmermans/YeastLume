@@ -55,13 +55,9 @@ conda env remove -n BBDM -y
 conda create -n BBDM python=3.9.16 -y
 echo "✅ Created BBDM Conda environment with Python 3.9.16"
 
+# Apply the environment file
 conda activate BBDM
-CONDA_NO_PLUGINS=true \
-conda env update -n BBDM -f environment.yml --prune --solver classic \
-  --override-channels \
-  -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main \
-  -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge \
-  -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch
+conda env update --file environment.yml --prune
 echo "✅ Updated BBDM environment using environment.yml"
 
 echo "✅ BBDM setup complete!"
