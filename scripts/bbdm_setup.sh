@@ -23,7 +23,7 @@ echo "✅ Updated ckpt_path in BBDM yaml"
 # Clone the diffusion model if it doesn't already exist
 # https://github.com/xuekt98/BBDM
 if [ -d "BBDM" ]; then
-    echo "⚠️BBDM directory already exists; skipping clone"
+    echo "⚠️ BBDM directory already exists; skipping clone"
 else
     git clone https://github.com/xuekt98/BBDM.git
     echo "✅ Cloned BBDM repository"
@@ -54,8 +54,14 @@ conda env remove -n BBDM -y
 # Set up the BBDM environment
 conda create -n BBDM python=3.9.16 -y
 echo "✅ Created BBDM Conda environment with Python 3.9.16"
+
 conda activate BBDM
-conda env update --file environment.yml --prune
+CONDA_NO_PLUGINS=true \
+conda env update -n BBDM -f environment.yml --prune --solver classic \
+  --override-channels \
+  -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main \
+  -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge \
+  -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch
 echo "✅ Updated BBDM environment using environment.yml"
 
 echo "✅ BBDM setup complete!"
