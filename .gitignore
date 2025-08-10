@@ -9,7 +9,6 @@ fluorescence_val.txt
 
 # Dataset
 data/
-data-unseen/
 
 # Checkpoints
 checkpoints/
