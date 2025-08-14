@@ -161,7 +161,7 @@ sbatch scripts/jobs/train_bbdm_job.sh
 4. Push the model checkpoints to remote for safekeeping.
 ```shell
 module load rclone/1.66.0
-rclone copy -P BBDM/results/YeastLume/LBBDM-f4/checkpoint/ gdrive:YeastLume/BBDM/checkpoints
+rclone copy -P BBDM/results/YeastLume/LBBDM-f4/checkpoint/ gdrive:YeastLume/BBDM/checkpoint
 ```
 
 ---
@@ -189,7 +189,7 @@ mkdir -p data-unseen/val/A
 mkdir -p data-unseen/val/B
 ```
 
-3. Pull the best BBDM checkpoint from remote manually. For example, to clone epoch 100, do: `rclone copy -P gdrive:YeastLume/BBDM/results/YeastLume/LBBDM-f4/checkpoint/top_model_epoch_100.pth checkpoints/BBDM`. The name of the checkpoint can be examined on Google Drive.
+3. Pull the desired BBDM checkpoint from remote manually. For example, to clone the top-performing epoch , do: `rclone copy -P gdrive:YeastLume/BBDM/checkpoint/top_model_epoch_###.pth checkpoints/BBDM`, replacing the `###` with the actual number substring. The name of the checkpoint can be examined on Google Drive.
 
 4. Run the evaluation script. This will write image test results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Unseen".
 ```shell
