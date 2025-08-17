@@ -1,7 +1,5 @@
 # 💡 YeastLume
 
-### In Active Development
-
 YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose)).
 
 ![YeastLume Pipeline](media/yeastlume-pipeline.png)
@@ -9,37 +7,8 @@ YeastLume is a budding yeast microscopy image processing pipeline that uses diff
 
 ---
 
-## 🚧 Next Steps / Limitations
-
-This project demonstrates that BBDM can reconstruct fluorescence-like images from bright-field inputs. However, the current pipeline has several important limitations that future work should address:
-
-### 1. **Frame-Wise Splitting Ignores Biological Context**
-Currently, frames from the same `.tif` movie are split into training, validation, and test sets independently. This introduces bias due to low variance in the validation set and one of the test sets.
-
-**→ Future direction:** Split data by `.tif` file (i.e., by movie), ensuring no overlap between training, validation, and test videos. This provides a more biologically meaningful evaluation of generalization to unseen time series. Refactor/trim intra-film job logic to only use the new data split paradigm.
-
-### 2. **Colormaps Distort Raw Imaging Data**
-Both bright-field and fluorescence channels are converted into RGB images using artificial colormaps. Though this decision was intentional for a proof-of-concept, it may negatively impact downstream segmentation (via Cellpose or other means).  
-
-**→ Future direction:** Keep all data in raw grayscale format throughout preprocessing, training, and inference. Adjust model configs accordingly to accept true high-definition grayscale input/output.
-
-### 3. **Segmentation Does Not Leverage Original Bright-Field**
-Currently, segmentation is run only on the reconstructed fluorescence images. However, segmentation models may accept multiple channels from a `.tif` at once.
-
-**→ Future direction:**  
-- Run Cellpose using [bright-field, predicted fluorescence] and compare segmentation results to [bright-field, ground-truth fluorescence].  
-- Evaluate whether the reconstructed fluorescence actually improves segmentation beyond using bright-field alone.
-- Experiment with new SOTA segmentation strategies on fluorescence frames (using labeled ground-truth).
-
-### 4. **Better End-to-End Support**
-The repository currently requires significant file handling while data preprocessing steps are being finalized.
-
-**→ Future direction:** Provide full E2E support for a single-entry pipeline. Through Python configuration files, published pre-trained weights (e.g., on Hugging Face), or custom orchestration logic, users should be able to input one or more bright-field images and receive the corresponding binary cell masks, with the intermediate fluorescence frames optionally returned.
-
----
-
-# ⚙️ Installation and Use
-Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data. Steps 1 and 2 assume a local, unix-based environment (e.g., macOS), and the remaining steps assume use on a high-performance cluster (e.g., Hábrók).
+# ⚙️ Instructions
+Below are steps for how to train a BBDM model with paired bright-field and fluorescence data. Steps 1 and 2 assume a local, unix-based environment (e.g., macOS), and the remaining steps assume use on a high-performance cluster (e.g., University of Groningen's Hábrók).
 
 ### Dataset
 - The microscopy datasets used in this project are not publicly distributed, but the pipeline will work with similar .tif input files as long as the installation and preprocessing steps are followed.
@@ -60,7 +29,7 @@ Below are instructions on how to train a BBDM model with paired bright-field and
 ---
 
 ![Training Process](media/yeastlume-training.png)
-*Raw .tif movies are split into paired datasets (bright-field and fluorescence), each subdivided into training, validation, and test sets. The VQGAN learns a latent representation of the fluorescence images, and the BBDM is trained to generate these representations from bright-field inputs.*
+*Raw .tif movies are manually split and then the two relevant channel frame subset pairs are saved for training, validation, and testing. The VQGAN learns a latent representation of the fluorescence images, and the BBDM is trained to generate these representations from bright-field inputs. The test sets are only used for final inference on the BBDM.*
 
 
 ## 1. Setup Data Preparation
@@ -75,7 +44,20 @@ Run the data loading setup script for YeastLume's data preparation.
 ## 2. Data Preparation and Preprocessing
 BBDM expects data in a particular format for training, validating, and testing. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
 
-1. Populate the [`data-loading/raw-data`](data-loading/raw-data) and [`data-loading/unseen-raw-data`](data-loading/unseen-raw-data) directories with your (unique) multi-channel `.tif` files of `512x512` films. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+The images have preprocessing applied to normalize their bright-field channels. In [`data`](./data), every tenth frame from the films is utilized. For each frame selected for the training set, six copies with augmentations are also created, namely:
+
+- 90° rotation
+- 180° rotation
+- 270° rotation
+- Horizontal flip
+- Vertical flip
+
+⚠️ **NOTE:** The preprocessing applies `gray` and `magma` colormaps to the bright-field and fluorescence frames, respectively, as the support for high-detail for VQGAN and BBDM was apparently dubious. An improved methodology would include forks of the VQGAN and BBDM repository for full, guaranteed support of high-quality (uint32) images. Colormaps are thus utilized to support the models' learning of cell and nuclei placement.
+
+An expanded frame pair test set in [`full-test-data`](./full-test-data) utilizes every frame from the test films for evaluation, with the same preprocessing.
+
+1. Populate the [`data-loading/raw-data`](data-loading/raw-data) directory with your (unique) multi-channel `.tif` files of `512x512` films based on desired split in the subdirectories. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+
 2. Run the preprocessing script to automatically create the respective data folders.
 ```shell
 ./scripts/preprocessing.sh
