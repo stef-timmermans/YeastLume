@@ -62,4 +62,14 @@ python3 main.py \
   --gpu_ids 0 \
   --resume_model "$TOP_MODEL_PATH"
 
-echo "Evaluation finished at: $(date)"
+echo "Evaluation on primary dataset finished at: $(date)"
+echo ""
+
+# Launch inference on VQGAN / BBDM model pair without skipping frames
+python3 main.py \
+  --config configs/Template-LBBDM-f4-Full-Test-Set.yaml \
+  --sample_to_eval \
+  --gpu_ids 0 \
+  --resume_model "$TOP_MODEL_PATH"
+
+echo "Evaluation on full test set finished at: $(date)"
