@@ -9,6 +9,7 @@ fluorescence_val.txt
 
 # Dataset
 data/
+full-test-data/
 
 # Checkpoints
 checkpoints/
