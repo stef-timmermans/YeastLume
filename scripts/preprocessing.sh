@@ -12,4 +12,4 @@ jupyter nbconvert --ClearOutputPreprocessor.enabled=True \
 --to notebook --inplace --execute data_preprocessing.ipynb
 
 jupyter nbconvert --ClearOutputPreprocessor.enabled=True \
---to notebook --inplace --execute supplementary_test_data.ipynb
+--to notebook --inplace --execute full_test_set_preprocessing.ipynb
