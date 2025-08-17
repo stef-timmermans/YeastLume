@@ -9,16 +9,23 @@ DATA_DIR="$(pwd)/data"
 export DATA_DIR
 echo "✅ Set DATA_DIR to $DATA_DIR"
 
+# Set the full test set data working directory
+FULL_TEST_DIR="$(pwd)/full-test-data"
+export FULL_TEST_DIR
+echo "✅ Set FULL_TEST_DIR to $FULL_TEST_DIR"
+
 # Set the VQGAN checkpoint working directory
 VQGAN_DIR="$(pwd)"/checkpoints/VQGAN/last.ckpt
 echo "✅ Set VQGAN_DIR to $VQGAN_DIR"
 
-# Overwrite the BBDM template file data paths
+# Overwrite the BBDM template files' data paths
 sed -i "19s|dataset_path: '.*'|dataset_path: '${DATA_DIR}'|" Template-LBBDM-f4.yaml
-echo "✅ Updated dataset_path in BBDM yaml"
+sed -i "19s|dataset_path: '.*'|dataset_path: '${FULL_TEST_DIR}'|" Template-LBBDM-f4-Full-Test-Set.yaml
+echo "✅ Updated dataset_path in BBDM yamls"
 
 sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4.yaml
-echo "✅ Updated ckpt_path in BBDM yaml"
+sed -i "56s|ckpt_path: '.*'|ckpt_path: '${VQGAN_DIR}'|" Template-LBBDM-f4-Full-Test-Set.yaml
+echo "✅ Updated ckpt_path in BBDM yamls"
 
 # Clone the diffusion model if it doesn't already exist
 # https://github.com/xuekt98/BBDM
@@ -32,12 +39,14 @@ fi
 # Overwrite the BBDM environment files and model instruction templates
 cp environment.yml BBDM/
 cp Template-LBBDM-f4.yaml BBDM/configs/
+cp Template-LBBDM-f4-Full-Test-Set.yaml BBDM/configs/
 
-# Revert root template to prevent committing user paths
+# Revert root templates to prevent committing user paths
 git checkout -- Template-LBBDM-f4.yaml
+git checkout -- Template-LBBDM-f4-Full-Test-Set.yaml
 
 cd BBDM
-echo "✅ Moved environment.yml, Template-LBBDM-f4.yaml; reverted repo root git changes; changed into BBDM directory"
+echo "✅ Moved environment.yml, Template-LBBDM-f4.yamls; reverted repo root git changes; changed into BBDM directory"
 
 # Remote tracking from sub-repository
 rm -rf .git

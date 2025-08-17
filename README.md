@@ -100,7 +100,7 @@ Hosting the training data can be done via any service; however, this project was
 10. Push the model input data to remote (if training the model on a different machine).
 ```shell
 rclone copy -P data/ gdrive:YeastLume/data/
-rclone copy -P data-unseen/ gdrive:YeastLume/data-unseen/
+rclone copy -P full-test-data/ gdrive:YeastLume/full-test-data/
 ```
 
 *Optional steps if involving multiple researchers/developers are included at the bottom of this document under [Remote Data Hosting via Rclone (cont.)](#remote-data-hosting-via-rclone-cont)*.
@@ -178,15 +178,15 @@ The second test set is from unseen `.tif` movies. This set can be used to evalua
 ```shell
 module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
-rclone copy -P gdrive:YeastLume/data-unseen/ data-unseen/
+rclone copy -P gdrive:YeastLume/full-test-data/ full-test-data/
 ```
 
 2. Ensure that necessary (empty) folders exist for the unseen movies test. This is necessary because BBDM checks for a valid data directory layout regardless of whether some folders are not read.
 ```shell
-mkdir -p data-unseen/train/A
-mkdir -p data-unseen/train/B
-mkdir -p data-unseen/val/A
-mkdir -p data-unseen/val/B
+mkdir -p full-test-data/train/A
+mkdir -p full-test-data/train/B
+mkdir -p full-test-data/val/A
+mkdir -p full-test-data/val/B
 ```
 
 3. Pull the desired BBDM checkpoint from remote manually. For example, to clone the top-performing epoch , do: `rclone copy -P gdrive:YeastLume/BBDM/checkpoint/top_model_epoch_###.pth checkpoints/BBDM`, replacing the `###` with the actual number substring. The name of the checkpoint can be examined on Google Drive.
