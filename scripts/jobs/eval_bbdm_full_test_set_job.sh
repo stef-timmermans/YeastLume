@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=bbdm-yeast-eval
+#SBATCH --job-name=bbdm-yeast-eval-full-test
 #SBATCH --gpus-per-node=a100:1
 #SBATCH --partition=gpumedium
 #SBATCH --nodes=1
@@ -8,8 +8,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --time=12:00:00
-#SBATCH --output=logs/bbdm_yeast_eval_%j.out
-#SBATCH --error=logs/bbdm_yeast_eval_%j.err
+#SBATCH --output=logs/bbdm_yeast_eval_full_test_%j.out
+#SBATCH --error=logs/bbdm_yeast_eval_full_test_%j.err
 
 # Leave the script if an error is encountered
 set -e
@@ -55,9 +55,9 @@ echo "Conda version: $(conda --version)"
 echo "Python version: $(python --version)"
 echo ""
 
-# Launch inference on VQGAN / BBDM model pair
+# Launch inference on VQGAN / BBDM model pair without skipping frames
 python3 main.py \
-  --config configs/Template-LBBDM-f4.yaml \
+  --config configs/Template-LBBDM-f4-Full-Test-Set.yaml \
   --sample_to_eval \
   --gpu_ids 0 \
   --resume_model "$TOP_MODEL_PATH"
