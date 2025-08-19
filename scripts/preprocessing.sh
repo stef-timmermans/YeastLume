@@ -8,8 +8,11 @@ source .venv/bin/activate
 
 # Run the notebooks (outputs not printed, images will still be written)
 # To save output remove the `-ClearOutputPreprocessor.enabled=True` flag
+
+# Primary dataset notebook
 jupyter nbconvert --ClearOutputPreprocessor.enabled=True \
 --to notebook --inplace --execute data_preprocessing.ipynb
 
+# Full test set notebook
 jupyter nbconvert --ClearOutputPreprocessor.enabled=True \
---to notebook --inplace --execute supplementary_test_data.ipynb
+--to notebook --inplace --execute full_test_set_preprocessing.ipynb

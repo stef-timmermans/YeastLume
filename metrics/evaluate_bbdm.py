@@ -24,8 +24,9 @@ def evaluate(dir_path):
     print(f"SSIM: {np.mean(ssim_scores):.4f}")
     print(f"MSE: {np.mean(mse_scores):.2f}")
 
-print("Seen set:")
+print("Primary dataset:")
 evaluate("../BBDM/results/YeastLume/LBBDM-f4/sample_to_eval")
 
-print("\nUnseen set:")
-evaluate("../BBDM/results/YeastLume-Unseen/LBBDM-f4/sample_to_eval")
+print("\n")
+print("Full test dataset:")
+evaluate("../BBDM/results/YeastLume-Full-Test-Set/LBBDM-f4/sample_to_eval")

@@ -44,13 +44,13 @@ echo "Conda version: $(conda --version)"
 echo "Python version: $(python --version)"
 echo ""
 
-# Launch segmentation of first test set
-echo "Segmenting data output..."
-python segmentation/segment_isolated_channel.py BBDM/results/YeastLume/LBBDM-f4/sample_to_eval/200 segmentation/masks/seen
+# Launch segmentation of the primary test set
+echo "Segmenting primary test data output..."
+python segmentation/segment_isolated_channel.py BBDM/results/YeastLume/LBBDM-f4/sample_to_eval/200 segmentation/masks/primary
 
-# Launch segmentation of second test set
+# Launch segmentation of the full test set
 echo ""
-echo "Segmenting data-unseen output..."
-python segmentation/segment_isolated_channel.py BBDM/results/YeastLume-Unseen/LBBDM-f4/sample_to_eval/200 segmentation/masks/unseen
+echo "Segmenting full test data output..."
+python segmentation/segment_isolated_channel.py BBDM/results/YeastLume-Full-Test-Set/LBBDM-f4/sample_to_eval/200 segmentation/masks/full
 
 echo "Segmentation finished at: $(date)"

@@ -13,7 +13,7 @@ testing:
   sample_num: 1
 
 data:
-  dataset_name: 'YeastLume-Unseen'
+  dataset_name: 'YeastLume-Full-Test-Set'
   dataset_type: 'custom_aligned'
   dataset_config:
     dataset_path: 'OVERWRITTEN_BY_BBDM_SETUP_SH'

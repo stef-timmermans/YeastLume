@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=bbdm-yeast-train
+#SBATCH --job-name=bbdm-yeast-eval
 #SBATCH --gpus-per-node=a100:1
 #SBATCH --partition=gpumedium
 #SBATCH --nodes=1
@@ -55,25 +55,21 @@ echo "Conda version: $(conda --version)"
 echo "Python version: $(python --version)"
 echo ""
 
-# Launch intra .tif file evaluation
+# Launch inference on VQGAN / BBDM model pair
 python3 main.py \
   --config configs/Template-LBBDM-f4.yaml \
   --sample_to_eval \
   --gpu_ids 0 \
   --resume_model "$TOP_MODEL_PATH"
 
-echo "Evaluation on same-file frames finished at: $(date)"
+echo "Evaluation on primary dataset finished at: $(date)"
 echo ""
 
-echo "Sleeping for 10 seconds to prevent model errors..."
-echo ""
-sleep 10
-
-# Launch inter .tif file evaluation
+# Launch inference on VQGAN / BBDM model pair without skipping frames
 python3 main.py \
-  --config configs/Template-LBBDM-f4-unseen.yaml \
+  --config configs/Template-LBBDM-f4-Full-Test-Set.yaml \
   --sample_to_eval \
   --gpu_ids 0 \
   --resume_model "$TOP_MODEL_PATH"
 
-echo "Evaluation on unseen-file frames finished at: $(date)"
+echo "Evaluation on full test set finished at: $(date)"

@@ -7,7 +7,7 @@ echo "✅ Starting Cellpose setup..."
 # Clone the segmentation model if it doesn't already exist
 # https://github.com/MouseLand/cellpose
 if [ -d "cellpose" ]; then
-    echo "⚠️cellpose directory already exists; skipping clone"
+    echo "⚠️ cellpose directory already exists; skipping clone"
 else
     git clone https://github.com/MouseLand/cellpose.git
     echo "✅ Cloned Cellpose repository"
@@ -31,6 +31,7 @@ conda env remove -n cellpose -y
 # Set up the cellpose environment
 conda create -n cellpose python=3.8.5 -y
 echo "✅ Created cellpose Conda environment with Python 3.8.5"
+
 conda activate cellpose
 conda env update --file environment.yml --prune
 echo "✅ Updated cellpose environment using environment.yml"

@@ -1,66 +1,35 @@
 # 💡 YeastLume
 
-### In Active Development
-
-YeastLume is a budding yeast microscopy image processing pipeline that uses diffusion-based generative models to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose)).
+YeastLume is a budding yeast microscopy tool that uses a diffusion-based generative model to reconstruct fluorescence images from bright-field input. It is trained on paired bright-field and fluorescence images stored in multi-channel .tif files. This repository includes preprocessing tools, training pipelines for the utilized models ([VQGAN](https://github.com/CompVis/taming-transformers/) and [BBDM](https://github.com/xuekt98/BBDM)), and utilities for running inference, evaluation, and segmentation (via [Cellpose](https://github.com/MouseLand/cellpose)).
 
 ![YeastLume Pipeline](media/yeastlume-pipeline.png)
 *Starting from multi-channel .tif microscopy movies, the pipeline extracts frame pairs, translates bright-field frames into synthetic fluorescence using a trained BBDM, and segments the resulting images using Cellpose, returning binary cell masks.*
 
 ---
 
-## 🚧 Next Steps / Limitations
-
-This project demonstrates that BBDM can reconstruct fluorescence-like images from bright-field inputs. However, the current pipeline has several important limitations that future work should address:
-
-### 1. **Frame-Wise Splitting Ignores Biological Context**
-Currently, frames from the same `.tif` movie are split into training, validation, and test sets independently. This introduces bias due to low variance in the validation set and one of the test sets.
-
-**→ Future direction:** Split data by `.tif` file (i.e., by movie), ensuring no overlap between training, validation, and test videos. This provides a more biologically meaningful evaluation of generalization to unseen time series. Refactor/trim intra-film job logic to only use the new data split paradigm.
-
-### 2. **Colormaps Distort Raw Imaging Data**
-Both bright-field and fluorescence channels are converted into RGB images using artificial colormaps. Though this decision was intentional for a proof-of-concept, it may negatively impact downstream segmentation (via Cellpose or other means).  
-
-**→ Future direction:** Keep all data in raw grayscale format throughout preprocessing, training, and inference. Adjust model configs accordingly to accept true high-definition grayscale input/output.
-
-### 3. **Segmentation Does Not Leverage Original Bright-Field**
-Currently, segmentation is run only on the reconstructed fluorescence images. However, segmentation models may accept multiple channels from a `.tif` at once.
-
-**→ Future direction:**  
-- Run Cellpose using [bright-field, predicted fluorescence] and compare segmentation results to [bright-field, ground-truth fluorescence].  
-- Evaluate whether the reconstructed fluorescence actually improves segmentation beyond using bright-field alone.
-- Experiment with new SOTA segmentation strategies on fluorescence frames (using labeled ground-truth).
-
-### 4. **Better End-to-End Support**
-The repository currently requires significant file handling while data preprocessing steps are being finalized.
-
-**→ Future direction:** Provide full E2E support for a single-entry pipeline. Through Python configuration files, published pre-trained weights (e.g., on Hugging Face), or custom orchestration logic, users should be able to input one or more bright-field images and receive the corresponding binary cell masks, with the intermediate fluorescence frames optionally returned.
-
----
-
-# ⚙️ Installation and Use
-Below are instructions on how to train a BBDM model with paired bright-field and fluorescence data. Steps 1 and 2 assume a local, unix-based environment (e.g., macOS), and the remaining steps assume use on a high-performance cluster (e.g., Hábrók).
+# ⚙️ Instructions
+Below are steps for how to train a BBDM model with paired bright-field and fluorescence data. Steps 1 and 2 can be done via a local, Unix-based environment (e.g., macOS), but the remaining steps assume the use of a high-performance cluster (e.g., University of Groningen's Hábrók) for [Slurm](https://slurm.schedmd.com) jobs.
 
 ### Dataset
-- The microscopy datasets used in this project are not publicly distributed, but the pipeline will work with similar .tif input files as long as the installation and preprocessing steps are followed.
+- The microscopy datasets used in this project are not publicly distributed, but the pipeline will work with .tif input files as long as the installation and preprocessing steps are followed and model configurations are adjusted.
 
-### Local Requirements
-- 512x512 three-channel .tif films
+### Local Requirements *(when applicable)*
+- 512x512 multi-channel .tif films
 - Python 3.11+ (with pip)
 - Rclone *(if pushing/pulling data)*
 
 ### Remote Requirements
-- SLURM job scheduler
+- Slurm job scheduling system
 - Unix/Linux shell with CUDA GPU available
 - Conda (via Anaconda3/2024.02-1)
 - Rclone *(if pushing/pulling data)*
 
-⚠️ **NOTE:** SLURM job scripts assume YeastLume is in the `$HOME` directory!
+⚠️ **NOTE:** Slurm job scripts assume that the YeastLume project root is in the `$HOME` directory!
 
 ---
 
 ![Training Process](media/yeastlume-training.png)
-*Raw .tif movies are split into paired datasets (bright-field and fluorescence), each subdivided into training, validation, and test sets. The VQGAN learns a latent representation of the fluorescence images, and the BBDM is trained to generate these representations from bright-field inputs.*
+*Raw .tif movies are manually split and then the two relevant channel frame subset pairs are saved for training, validation, and testing. The VQGAN learns a latent representation of the fluorescence images, and the BBDM is trained to generate these representations from bright-field inputs. Two distinct test sets are reserved for final inference on the BBDM.*
 
 
 ## 1. Setup Data Preparation
@@ -73,20 +42,33 @@ Run the data loading setup script for YeastLume's data preparation.
 ---
 
 ## 2. Data Preparation and Preprocessing
-BBDM expects data in a particular format for training, validating, and testing. To fulfill these requirements, allow the data preprocessing notebook to create individual, paired image files.
+BBDM expects data in a particular format for training, validating, and testing. To fulfill these requirements, allow the data preprocessing notebook to create paired image files.
 
-1. Populate the [`data-loading/raw-data`](data-loading/raw-data) and [`data-loading/unseen-raw-data`](data-loading/unseen-raw-data) directories with your (unique) multi-channel `.tif` files of `512x512` films. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+These images have preprocessing applied to normalize their bright-field channels. In [`data`](./data), every tenth frame from the films is utilized. For each frame selected for the training set, five additional augmented copies with are created, namely:
+
+- 90° rotation
+- 180° rotation
+- 270° rotation
+- Horizontal flip
+- Vertical flip
+
+⚠️ **NOTE:** The preprocessing applies `gray` and `magma` colormaps to the bright-field and fluorescence frames, respectively, as the support for high-detail for VQGAN and BBDM is dubious. An improved version may include forks of the VQGAN and BBDM repository for full, guaranteed support of high-quality (uint32) images. Colormaps are thus currently utilized to support the models' learning of cell and nuclei placement.
+
+The primary test set is generated along with the training and validation sets via the frame interval logic in [`data_preprocessing.ipynb`](./data-loading/data_preprocessing.ipynb).  A second  test set that utilizes every frame for evaluation is created via [`full_test_set_preprocessing.ipynb`](./data-loading/full_test_set_preprocessing.ipynb).
+
+To generate the frame data, do the following:
+
+1. Populate the [`data-loading/raw-data`](data-loading/raw-data) subdirectories with `512x512` multi-channel `.tif` files based on the desired split. These files should be in standard format with bright-field at channel zero and fluorescence at channel one. If data loading fails, please [see the related README](data-loading/README.md).
+
 2. Run the preprocessing script to automatically create the respective data folders.
 ```shell
 ./scripts/preprocessing.sh
 ```
 
-*Note this script does not save notebook output other than the created data directory. In the event of errors, see Line 9 of [`preprocessing.sh`](scripts/preprocessing.sh).*
-
 ---
 
 ## 3. Remote Data Hosting via Rclone
-Hosting the training data can be done via any service; however, this project was developed using Rclone—the University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly set up Google Drive as a storage space in a headless environment, ensure the following steps are taken on a **new fork (or copy)** of the repository:
+Hosting the training data can be done via any service; however, this project was developed using Rclone—the University of Groningen's suggested data software module for Hábrók—with Google Cloud Platform. In order to correctly set up Google Drive as a storage space in a headless environment, ensure the following steps are taken:
 
 1. Create a new Google Cloud Platform project.
 2. Under "APIs and Services" → "Enabled APIs & services", click "+ Enable APIs and services" and search for and enable the Google Drive API.
@@ -96,21 +78,21 @@ Hosting the training data can be done via any service; however, this project was
 6. Under "APIs and Services" → "Credentials", click "+ Create credentials" and select for an OAuth Client ID of type "Desktop app".
 7. From the pop-up, download the provided JSON from the bottom-left button.
 8. Move the created JSON file into [`accounts/`](./accounts) for convenience. It should automatically be ignored from tracking at this point.
-9. Follow the [University of Groningen Hábrók documentation](https://wiki.hpc.rug.nl/habrok/data_management/google_drive) (or a substitute host supporting Rclone), specifically the section *"Loading and configuring the application"*. Copy the appropriate variable names from the Google Cloud Project JSON file and authenticate. Name the remote `gdrive`. This configuration should be done on each machine Rclone is used to push and pull data.
-10. Push the model input data to remote (if training the model on a different machine).
+9. Follow the [Hábrók documentation](https://wiki.hpc.rug.nl/habrok/data_management/google_drive) (or a substitute host with Rclone), specifically the section *"Loading and configuring the application"*. Copy the appropriate variable names from the Google Cloud Project JSON file and authenticate. Name the remote `gdrive`. This configuration should be done on each machine Rclone is used to push and pull data.
+10. Push the model input data to remote (if training the model on a different machine than where preprocessing was done).
 ```shell
 rclone copy -P data/ gdrive:YeastLume/data/
-rclone copy -P data-unseen/ gdrive:YeastLume/data-unseen/
+rclone copy -P full-test-data/ gdrive:YeastLume/full-test-data/
 ```
 
-*Optional steps if involving multiple researchers/developers are included at the bottom of this document under [Remote Data Hosting via Rclone (cont.)](#remote-data-hosting-via-rclone-cont)*.
+*Optional steps to facilitate group work with shared configurations are included at the bottom of this document under [Remote Data Hosting via Rclone (cont.)](#remote-data-hosting-via-rclone-cont)*.
 
 ---
 
 ## 4. Training the VQGAN
 BBDM expects a VQGAN checkpoint as input to the model. [The repository links options in its "Pretrained Models" section](https://github.com/xuekt98/BBDM). You can follow their instructions to find an appropriate checkpoint (VQGAN-4, by default).
 
-However, in order to maximize the efficacy of BBDM, it is also possible to train a new VQGAN to learn to reconstruct the fluorescence images in `data/train/B`. The model does not have access to the test set. Prepare the model with the following steps:
+However, in order to maximize the efficacy of BBDM, it is recommended to train a new VQGAN to better learn how to reconstruct the fluorescence images from the training data. Note that the VQGAN model never sees the test set. To leverage a unique VQGAN, prepare for training with the following steps:
 
 1. Pull the model input data from remote (if necessary).
 ```shell
@@ -118,7 +100,7 @@ module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
 ```
 
-2. Configure the Conda environment for the model ([taming-transformers](https://github.com/CompVis/taming-transformers/)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any changes to `custom_vqgan.yaml` beforehand.
+2. Configure the Conda environment for the model (from [taming-transformers](https://github.com/CompVis/taming-transformers/)). This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any hyperparameter changes to `custom_vqgan.yaml` beforehand.
 ```shell
 ./scripts/gan_setup.sh
 ```
@@ -130,7 +112,11 @@ sbatch scripts/jobs/train_vqgan_job.sh
 
 *In the event of failure, a smaller test job can be run via `sbatch scripts/jobs/train_debug_vqgan_job.sh`. This script is the same as `train_vqgan_job.sh`, except it omits the actual Python call to build the model, and with much lighter GPU[-hour] usage.*
 
-Train the VQGAN until results are as desired (the model will eventually plateau in performance). Then push the created checkpoints to remote for safekeeping. This command assumes only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
+Train the VQGAN until results are as desired (the model will eventually plateau in performance).
+
+⚠️ **NOTE:** An improvement to this repository is support for early stopping and saving the best VQGAN (checkpoints) based on metrics.
+
+4. Push the model checkpoints to remote for safekeeping. This command assumes only one training log exists. To push to remote otherwise, populate the expanded subpath manually.
 ```shell
 module load rclone/1.66.0
 rclone copy -P $(ls -d taming-transformers/logs/*custom_vqgan)/checkpoints gdrive:YeastLume/VQGAN/checkpoints
@@ -146,12 +132,12 @@ module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/VQGAN/checkpoints/last.ckpt checkpoints/VQGAN/
 ```
 
-2. Configure the Conda environment for the BBDM model. This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any changes to `environment.yml` beforehand.
+2. Configure the Conda environment for the BBDM model. This script was developed for the University of Groningen's Hábrók, so many install instructions may break on other machines. Please be sure to commit any hyperparameter changes to `environment.yml` beforehand.
 ```shell
 ./scripts/bbdm_setup.sh
 ```
 
-3. Run the model training script via a dedicated job. This uses the `Template-LBBDM-f4.yaml` template (latent space BBDM with a latent depth 4).
+3. Run the model training script via a dedicated job. This uses the `Template-LBBDM-f4.yaml` template (latent space BBDM with a latent depth of 4).
 ```shell
 sbatch scripts/jobs/train_bbdm_job.sh
 ```
@@ -161,43 +147,38 @@ sbatch scripts/jobs/train_bbdm_job.sh
 4. Push the model checkpoints to remote for safekeeping.
 ```shell
 module load rclone/1.66.0
-rclone copy -P BBDM/results/YeastLume/LBBDM-f4/checkpoint/ gdrive:YeastLume/BBDM/checkpoints
+rclone copy -P BBDM/results/YeastLume/LBBDM-f4/checkpoint/ gdrive:YeastLume/BBDM/checkpoint
 ```
 
 ---
 
 ## 6. Running Inference on the BBDM Model
 
-With the BBDM model trained, inference can be run on a selected checkpoint via two different test sets for evaluation.
-
-The first is on data from the same `.tif` movies as the training and validation data, albeit from unseen individual frames.
-
-The second test set is from unseen `.tif` movies. This set can be used to evaluate how the model performs under similar but not identical conditions as the training data.
+With the BBDM model trained, inference can be run on a selected checkpoint with the two different test sets for evaluation.
 
 1. Pull both sets of remote data (if necessary).
 ```shell
 module load rclone/1.66.0
 rclone copy -P gdrive:YeastLume/data/ data/
-rclone copy -P gdrive:YeastLume/data-unseen/ data-unseen/
+rclone copy -P gdrive:YeastLume/full-test-data/ full-test-data/
 ```
 
-2. Ensure that necessary (empty) folders exist for the unseen movies test. This is necessary because BBDM checks for a valid data directory layout regardless of whether some folders are not read.
+2. Ensure that necessary (empty) folders exist for the expanded test set. This is necessary because BBDM checks for a valid data directory layout regardless of whether some folders are not read.
 ```shell
-mkdir -p data-unseen/train/A
-mkdir -p data-unseen/train/B
-mkdir -p data-unseen/val/A
-mkdir -p data-unseen/val/B
+mkdir -p full-test-data/train/A
+mkdir -p full-test-data/train/B
+mkdir -p full-test-data/val/A
+mkdir -p full-test-data/val/B
 ```
 
-3. Pull the best BBDM checkpoint from remote manually. For example, to clone epoch 100, do: `rclone copy -P gdrive:YeastLume/BBDM/results/YeastLume/LBBDM-f4/checkpoint/top_model_epoch_100.pth checkpoints/BBDM`. The name of the checkpoint can be examined on Google Drive.
+3. Pull the desired BBDM checkpoint from remote. For example, to clone the top-performing epoch , do: `rclone copy -P gdrive:YeastLume/BBDM/checkpoint/top_model_epoch_###.pth checkpoints/BBDM`, replacing the `###` with the actual number substring. The name of the checkpoint can be examined on Google Drive. Or move the checkpoint manually. If the VQGAN and BBDM checkpoints are not present, the BBDM model will either not begin evaluation or provide garbage output.
 
-4. Run the evaluation script. This will write image test results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Unseen".
+4. Run the evaluation script. This will write image test inference results in the preexisting BBDM-related subdirectory, as well as a new one named "YeastLume-Full-Test-Set".
 ```shell
 sbatch scripts/jobs/eval_bbdm_job.sh
 ```
 
 5. Run metrics on the supplied images. PSNR and SSIM measure reconstruction fidelity and structural similarity between predicted and ground-truth fluorescence images, while MSE captures pixel-wise error.
-Lower PSNR and SSIM, along with higher MSE on the unseen set, indicate the model has overfit to the training data.
 ```shell
 ./scripts/metrics_setup.sh
 ./scripts/metrics.sh
@@ -214,7 +195,7 @@ From the evaluation output fluorescence frames, utilize [Cellpose](https://githu
 ./scripts/cellpose_setup.sh
 ```
 
-2. Segment using Cellpose on the evaluation images. Images will be stored in [`segmentation/masks/`](./segmentation/masks).
+2. Segment via Cellpose on the evaluation images (single-channel segmentation). Images will be stored in [`segmentation/masks/`](./segmentation/masks).
 
 ```shell
 sbatch scripts/jobs/cellpose_isolated_job.sh
@@ -232,7 +213,7 @@ sbatch scripts/jobs/cellpose_isolated_job.sh
 
 Note via [the Remote Data Hosting via Rclone section](#3-remote-data-hosting-via-rclone) that these steps are optional and are only needed if sharing a single Google Drive data setup.
 
-1. Rename the JSON file in [`accounts/`](./accounts) to `drive.json`. 
+1. Rename the JSON file in [`accounts/`](./accounts) to `drive.json` to remove it from tracking. 
 2. Install [SOPS](https://getsops.io/docs/#download) and run the encryption script, which should create `key` in [`accounts/`](./accounts). This file is more obscure, and can more safely be passed in messages, as it does not directly link to any user space. Changes to the encrypted JSON file are tracked by Git.
 ```shell
 ./accounts/encrypt.sh
